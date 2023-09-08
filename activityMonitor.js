@@ -24,14 +24,16 @@ function getSystemDetails(command, callback) {
     exec(command)
         .stdout
         .on('data', (data) => {
-            callback(data);
-            process.stdout.write(data)
+            const systemDetails = data.toString().replace(/[\r\n]/gm, '');
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(systemDetails);
+            callback(systemDetails)
         })
 }
 
 function updateActivityLog(processInfo) {
-    console.log('processInfo', processInfo);
-    fs.appendFile('activityMonitor.log', `<${Date.now()}> : <${processInfo}\n>`, (err) => {
+    fs.appendFile('activityMonitor.log', `<${Date.now()}> : <${processInfo}>${'\n'}`, (err) => {
         if (err) throw err;
     });
 }
