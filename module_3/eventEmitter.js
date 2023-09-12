@@ -54,8 +54,11 @@ class EventEmitter {
         return this.listeners[eventName];
     }
 }
+export default EventEmitter;
 
-const myEmitter = new EventEmitter();
+// need to uncomment to check function work
+
+/*const myEmitter = new EventEmitter();
 
 function c1() {
     console.log('an event occurred!');
@@ -101,4 +104,4 @@ console.log(myEmitter.rawListeners('eventOne'));
 myEmitter.off('eventOne', c1);
 console.log(myEmitter.listenerCount('eventOne'));
 myEmitter.off('eventOne', c2);
-console.log(myEmitter.listenerCount('eventOne'));
+console.log(myEmitter.listenerCount('eventOne'));*/

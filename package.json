@@ -4,7 +4,9 @@
   "description": "Project developed during GMP node course.",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "task1": "node module_3/eventEmitter.js",
+    "task2": "node module_3/withTime.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,6 @@
   "homepage": "https://github.com/Mashustia/gmp-node#readme",
   "dependencies": {
     "nodemon": "3.0.1"
-  }
+  },
+  "type":"module"
 }
