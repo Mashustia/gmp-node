@@ -19,7 +19,6 @@ class WithTime extends EventEmitter {
 const withTime = new WithTime();
 
 withTime.on('begin', () => console.log('About to execute'));
-withTime.on('data', (data) => console.log(data));
 withTime.on('end', () => console.log('Done with execute'));
 
 const getData = (url) => https.get(url, (response) => {
@@ -31,6 +30,7 @@ const getData = (url) => https.get(url, (response) => {
 
     response.on('end', () => {
         data = Buffer.concat(data).toString();
+        console.log(data)
     });
 
 }).on('error', (error) => {
