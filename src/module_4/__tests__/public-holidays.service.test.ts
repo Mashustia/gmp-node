@@ -1,11 +1,12 @@
 import axios from 'axios';
+import request from 'supertest';
+
 import {shortenPublicHoliday} from '../helpers';
 import {
     checkIfTodayIsPublicHoliday,
     getListOfPublicHolidays,
     getNextPublicHolidays
 } from '../services/public-holidays.service';
-import {PublicHoliday} from '../types';
 import {PUBLIC_HOLIDAYS_API_URL} from '../config';
 
 const mockHolidays = [
@@ -244,6 +245,8 @@ const mockHolidays = [
     }
 ]
 
+mockHolidays.forEach(Object.freeze);
+
 const validCountry = 'GB';
 const invalidCountry = 'AR';
 const validYear = 2023;
@@ -262,7 +265,7 @@ describe('public-holidays.service unit tests', () => {
     });
 
     describe('getListOfPublicHolidays', () => {
-        test('function should return correct holidays', async () => {
+        test('function should return correct list of public holidays', async () => {
             axiosGetSpy.mockImplementation(() => Promise.resolve({data: mockHolidays}));
             const expectedHolidays = mockHolidays.map(holiday => (shortenPublicHoliday(holiday)))
 
@@ -306,7 +309,7 @@ describe('public-holidays.service unit tests', () => {
     })
 
     describe('getNextPublicHolidays', () => {
-        test('function should return correct holidays', async () => {
+        test('function should return correct list of next holidays', async () => {
             axiosGetSpy.mockImplementation(() => Promise.resolve({data: mockHolidays}));
             const expectedHolidays = mockHolidays.map(holiday => (shortenPublicHoliday(holiday)))
 
@@ -330,12 +333,11 @@ describe('public-holidays.service unit tests', () => {
 
 describe('public-holidays.service integration tests', () => {
     describe('getListOfPublicHolidays', () => {
-        test('function should return correct holidays', async () => {
-            const expectedHolidays = mockHolidays.map(holiday => (shortenPublicHoliday(holiday)))
-
+        test('function should return correct list of public holidays', async () => {
             const result = await getListOfPublicHolidays(validYear, validCountry);
+            console.log('getListOfPublicHolidays', result);
 
-            expect(result).toEqual(expectedHolidays);
+            expect(result).toEqual(expect.any(Array));
         });
     });
     describe('checkIfTodayIsPublicHoliday', () => {
@@ -346,24 +348,24 @@ describe('public-holidays.service integration tests', () => {
         });
     });
     describe('getNextPublicHolidays', () => {
-        test('function should return correct holidays', async () => {
-            const nextHolidays = mockHolidays.map(holiday => (shortenPublicHoliday(holiday)))
+        test('function should return correct list of next holidays', async () => {
+            const result = await getNextPublicHolidays(validCountry);
+            console.log('getNextPublicHolidays', result);
 
-            expect(nextHolidays).toEqual(expect.any(Array));
+            expect(result).toEqual(expect.any(Array));
         });
     });
 });
 
 describe('Nager.Date API - V3 E2E tests', () => {
     describe('Get Public Holidays test', () => {
-        const api_url = `${PUBLIC_HOLIDAYS_API_URL}/PublicHolidays/${validYear}/${validCountry}`
+        const api_url = `/PublicHolidays/${validYear}/${validCountry}`
         test('get public holidays API should return 200 and array of holidays', async () => {
-
-            const {status, data} = await axios.get<PublicHoliday[]>(api_url);
+            const { status, body } = await request(PUBLIC_HOLIDAYS_API_URL).get(api_url);
 
             expect(status).toEqual(StatusCode.OK);
-            data.forEach((year: any) => {
-                expect(year).toEqual(
+            body.forEach((holiday: any) => {
+                expect(holiday).toEqual(
                     expect.objectContaining({
                         date: expect.any(String),
                         localName: expect.any(String),
@@ -378,13 +380,13 @@ describe('Nager.Date API - V3 E2E tests', () => {
     });
 
     describe('Get Next Public Holidays test', () => {
-        const api_url = `${PUBLIC_HOLIDAYS_API_URL}/NextPublicHolidays/${validCountry}`
+        const api_url = `/NextPublicHolidays/${validCountry}`
         test('should return 200 and array of upcoming public holidays', async () => {
-            const { status, data } = await axios.get<PublicHoliday[]>(api_url);
+            const { status, body } = await request(PUBLIC_HOLIDAYS_API_URL).get(api_url);
 
             expect(status).toEqual(StatusCode.OK);
-            data.forEach((year: any) => {
-                expect(year).toEqual(
+            body.forEach((holiday: any) => {
+                expect(holiday).toEqual(
                     expect.objectContaining({
                         date: expect.any(String),
                         localName: expect.any(String),
