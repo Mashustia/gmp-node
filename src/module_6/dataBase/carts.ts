@@ -1,4 +1,4 @@
-import { ProductEntity, product as bookProduct } from './product.entity'
+import { product_1, ProductEntity } from './products'
 
 export interface CartItemEntity {
     product: ProductEntity;
@@ -21,7 +21,7 @@ export interface Carts {
 }
 
 const cartItem: CartItemEntity = {
-    product: bookProduct,
+    product: product_1,
     count: 2,
 }
 
@@ -38,7 +38,7 @@ export const cart: CartsEntity = {
 const carts: Carts = {
     [userId]: {
         [cartId]: cart,
-    }
+    },
 };
 
-export default carts
+export default carts;

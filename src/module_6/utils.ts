@@ -3,7 +3,7 @@ import {
     Carts,
     CartsEntity,
     DeletedAndActiveCarts,
-} from './dataBase/carts.entity';
+} from './dataBase/carts';
 import { v4 as uuidv4 } from 'uuid';
 import { findKey, pick } from 'lodash-es';
 

@@ -1,6 +1,7 @@
 import { pick } from 'lodash-es';
-import carts, { CartsEntity } from '../dataBase/carts.entity'
+import carts, { CartsEntity } from '../dataBase/carts'
 import { createNewCart, getOrderData, getUserCartAndActiveCartId, modifyUserCart } from '../utils';
+import { errorMessage } from '../consts';
 
 interface Product {
     productId: string
@@ -37,7 +38,7 @@ const updateUserCart = (userId: string, product: Product): Omit<CartsEntity, 'us
 
         return modifyUserCart(activeCart)
     }
-    return createNewCart();
+    throw new Error(errorMessage.cart_not_found);
 }
 
 const emptyUserCart = (userId: string) => {
@@ -50,6 +51,7 @@ const emptyUserCart = (userId: string) => {
             success: true
         }
     }
+    throw new Error(errorMessage.cart_not_found);
 }
 
 const createOrder = (userId: string) => {
@@ -61,6 +63,7 @@ const createOrder = (userId: string) => {
             order
         }
     }
+    throw new Error(errorMessage.cart_not_found);
 }
 
 export default { getUserCart, updateUserCart, emptyUserCart, createOrder }

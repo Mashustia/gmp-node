@@ -15,3 +15,8 @@ export const Path = {
     products: `${Route.api}${Route.products}`,
     auth: `${Route.api}${Route.auth}`,
 }
+
+export const errorMessage = {
+    cart_not_found: 'Cart was not found',
+    no_product_with_id: 'No product with such id'
+}

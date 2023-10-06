@@ -1,4 +1,4 @@
-import { CartItemEntity, cart, userId } from './carts.entity';
+import { CartItemEntity, cart, userId } from './carts';
 
 type ORDER_STATUS = 'created' | 'completed';
 
@@ -6,7 +6,7 @@ export interface OrderEntity {
     id: string, // uuid
     userId: string;
     cartId: string;
-    items: CartItemEntity[] // products from CartsEntity
+    items: CartItemEntity[] // products from CartItemEntity
     payment: {
         type: string,
         address?: any,
