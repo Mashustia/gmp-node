@@ -12,4 +12,4 @@ const getProduct = (productId: string) => {
     throw new Error(errorMessage.no_product_with_id);
 }
 
-export default { getProduct, getProducts };
+export { getProduct, getProducts };

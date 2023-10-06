@@ -18,5 +18,6 @@ export const Path = {
 
 export const errorMessage = {
     cart_not_found: 'Cart was not found',
-    no_product_with_id: 'No product with such id'
+    no_product_with_id: 'No product with such id',
+    x_user_id_is_missing: 'Header x-user-id is missing',
 }

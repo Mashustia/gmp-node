@@ -1,19 +1,31 @@
 import { pick } from 'lodash-es';
 import carts, { CartsEntity } from '../dataBase/carts'
-import { createNewCart, getOrderData, getUserCartAndActiveCartId, modifyUserCart } from '../utils';
+import { createNewCart, getOrderData, getTotalPrice, getUserCartAndActiveCartId, modifyUserCart } from '../utils';
 import { errorMessage } from '../consts';
 
-interface Product {
+export interface Product {
     productId: string
     count: number
 }
 
-const getUserCart = (userId: string): Omit<CartsEntity, 'userId'> => {
+export interface CartTemplate {
+    cart: Pick<CartsEntity, 'id' | 'items'>
+    total: number
+}
+
+const getUserCart = (userId: string): CartTemplate => {
     const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
     if (activeCartId) {
-        return pick(userCarts[activeCartId], ['id', 'isDeleted', 'items'])
+        const cart = pick(userCarts[activeCartId], ['id', 'isDeleted', 'items']);
+        return {
+            cart,
+            total: getTotalPrice(cart.items)
+        }
     }
-    return createNewCart();
+    return {
+        cart: createNewCart(),
+        total: 0
+    }
 }
 
 const updateUserCart = (userId: string, product: Product): Omit<CartsEntity, 'userId'> => {
@@ -66,4 +78,4 @@ const createOrder = (userId: string) => {
     throw new Error(errorMessage.cart_not_found);
 }
 
-export default { getUserCart, updateUserCart, emptyUserCart, createOrder }
+export { getUserCart, updateUserCart, emptyUserCart, createOrder }
