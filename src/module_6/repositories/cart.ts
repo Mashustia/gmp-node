@@ -43,10 +43,9 @@ const updateUserCart = (userId: string, product: Product): CartTemplate | null =
         }
 
         if (productIsInCart) {
-            activeCart.items = activeCart.items.splice(productIndex, 1, {
-                ...activeCart.items[productIndex],
-                count: product.count
-            });
+            const updatedProduct = activeCart.items[productIndex];
+            updatedProduct.count = product.count;
+            activeCart.items = activeCart.items.splice(productIndex, 1, updatedProduct);
             userCarts[activeCartId] = activeCart;
 
             return fetchCartAndTotalPrice(userCarts[activeCartId]);
@@ -59,9 +58,10 @@ const updateUserCart = (userId: string, product: Product): CartTemplate | null =
                 count: product.count
             });
             userCarts[activeCartId] = activeCart;
+            return fetchCartAndTotalPrice(activeCart);
         }
 
-        return fetchCartAndTotalPrice(activeCart);
+        return null;
     }
     return null;
 }

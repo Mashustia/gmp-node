@@ -8,7 +8,7 @@ import { errorMessage } from '../consts';
 const getProductsController = async (req: Request, res: Response) => {
     const userId = getXUserHeader(req);
     if (userId) {
-        const products = getProducts();
+        const products = await getProducts();
 
         return getSuccessMessage({
             res,
@@ -21,8 +21,25 @@ const getProductsController = async (req: Request, res: Response) => {
 const getProductController = async (req: Request, res: Response) => {
     const userId = getXUserHeader(req);
     const productId = req.params.productId;
+
+    if (!productId) {
+        getErrorMessage({
+            res,
+            statusCode: StatusCode.BAD_REQUEST,
+            message: errorMessage.products_not_valid
+        })
+    }
+
+    if (!productId) {
+        getErrorMessage({
+            res,
+            statusCode: StatusCode.BAD_REQUEST,
+            message: errorMessage.products_not_valid
+        })
+    }
+
     if (userId && productId) {
-        const product = getProduct(productId);
+        const product = await getProduct(productId);
 
         if (!isNil(productId)) {
             return getSuccessMessage({

@@ -8,10 +8,11 @@ export const Route = {
     auth: '/auth',
     register: '/register',
     login: '/login',
+    profile: '/profile',
 }
 
 export const Path = {
-    cart: `${Route.api}${Route.cart}`,
+    cart: `${Route.api}${Route.profile}${Route.cart}`,
     products: `${Route.api}${Route.products}`,
     auth: `${Route.api}${Route.auth}`,
 }
@@ -26,4 +27,5 @@ export const errorMessage = {
     no_user_matching_authorization_header_is_found: 'User is not authorized',
     internal_server_error: 'Internal Server error',
     no_product_found: 'No product with such id',
+    products_not_valid: 'Products are not valid',
 }

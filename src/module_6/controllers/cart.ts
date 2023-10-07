@@ -13,9 +13,7 @@ const getCartController = async (req: Request, res: Response) => {
         return getSuccessMessage({
             res,
             statusCode: StatusCode.OK,
-            data: {
-                cart
-            }
+            data: cart
         });
     }
 }
@@ -31,9 +29,7 @@ const updateCartController = async (req: Request, res: Response) => {
             return getSuccessMessage({
                 res,
                 statusCode: StatusCode.OK,
-                data: {
-                    cart
-                }
+                data: updatedCart
             });
         }
     }
@@ -73,7 +69,7 @@ const checkoutCartController = async (req: Request, res: Response) => {
     const userId = getXUserHeader(req);
 
     if (userId) {
-        const order = checkoutCart(userId);
+        const order = await checkoutCart(userId);
 
         if (!isNil(order)) {
             return getSuccessMessage({
