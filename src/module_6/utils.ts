@@ -63,3 +63,10 @@ export const getSuccessMessage = <T>(
 });
 
 export const getXUserHeader = (req: Request) => req.header('x-user-id');
+
+export const fetchCartItemsUserIdExcluded = (cart: CartsEntity) => pick(cart, ['id', 'isDeleted', 'items']);
+
+export const fetchCartAndTotalPrice = (cart: CartsEntity) => ({
+    cart: fetchCartItemsUserIdExcluded(cart),
+    total: getTotalPrice(cart.items)
+});

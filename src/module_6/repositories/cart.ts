@@ -1,7 +1,11 @@
-import { pick } from 'lodash-es';
 import carts, { CartsEntity } from '../dataBase/carts'
-import { createNewCart, getOrderData, getTotalPrice, getUserCartAndActiveCartId, modifyUserCart } from '../utils';
-import { errorMessage } from '../consts';
+import {
+    createNewCart, fetchCartAndTotalPrice,
+    getOrderData,
+    getUserCartAndActiveCartId,
+} from '../utils';
+import products, { ProductEntity } from '../dataBase/products';
+import { OrderEntity, orders } from '../dataBase/orders';
 
 export interface Product {
     productId: string
@@ -16,11 +20,7 @@ export interface CartTemplate {
 const getUserCart = (userId: string): CartTemplate => {
     const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
     if (activeCartId) {
-        const cart = pick(userCarts[activeCartId], ['id', 'isDeleted', 'items']);
-        return {
-            cart,
-            total: getTotalPrice(cart.items)
-        }
+        return fetchCartAndTotalPrice(userCarts[activeCartId]);
     }
     return {
         cart: createNewCart(),
@@ -28,7 +28,7 @@ const getUserCart = (userId: string): CartTemplate => {
     }
 }
 
-const updateUserCart = (userId: string, product: Product): Omit<CartsEntity, 'userId'> => {
+const updateUserCart = (userId: string, product: Product): CartTemplate | null => {
     const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
     if (activeCartId) {
         const activeCart = userCarts[activeCartId];
@@ -37,7 +37,9 @@ const updateUserCart = (userId: string, product: Product): Omit<CartsEntity, 'us
         const needToDeleteProduct = product.count === 0;
         if (productIsInCart && needToDeleteProduct) {
             activeCart.items = activeCart.items.filter((item) => item.product.id !== product.productId);
-            return modifyUserCart(activeCart)
+            userCarts[activeCartId] = activeCart;
+
+            return fetchCartAndTotalPrice(userCarts[activeCartId]);
         }
 
         if (productIsInCart) {
@@ -45,37 +47,46 @@ const updateUserCart = (userId: string, product: Product): Omit<CartsEntity, 'us
                 ...activeCart.items[productIndex],
                 count: product.count
             });
-            return modifyUserCart(activeCart)
+            userCarts[activeCartId] = activeCart;
+
+            return fetchCartAndTotalPrice(userCarts[activeCartId]);
         }
 
-        return modifyUserCart(activeCart)
+        const productFullData: ProductEntity | undefined = products.find((item) => item.id === product.productId);
+        if (productFullData) {
+            activeCart.items.push({
+                product: productFullData,
+                count: product.count
+            });
+            userCarts[activeCartId] = activeCart;
+        }
+
+        return fetchCartAndTotalPrice(activeCart);
     }
-    throw new Error(errorMessage.cart_not_found);
+    return null;
 }
 
-const emptyUserCart = (userId: string) => {
+const emptyUserCart = (userId: string): boolean => {
     const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
     if (activeCartId) {
         const activeCart = userCarts[activeCartId];
         activeCart.items = [];
+        userCarts[activeCartId] = activeCart;
 
-        return {
-            success: true
-        }
+        return true;
     }
-    throw new Error(errorMessage.cart_not_found);
+    return false;
 }
 
-const createOrder = (userId: string) => {
+const createOrder = (userId: string): OrderEntity | null => {
     const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
     if (activeCartId) {
         const cart = userCarts[activeCartId];
         const order = getOrderData(userId, cart);
-        return {
-            order
-        }
+        orders.push(order);
+        return order;
     }
-    throw new Error(errorMessage.cart_not_found);
+    return null;
 }
 
 export { getUserCart, updateUserCart, emptyUserCart, createOrder }
