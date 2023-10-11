@@ -2,7 +2,7 @@ class EventEmitter {
     listeners = {};  // key-value pair
 
     addListener(eventName, fn) {
-        this.listeners[eventName] = this.listeners[eventName] || [];
+        this.listeners[eventName] = this.listeners[eventName] ?? [];
         this.listeners[eventName].push(fn);
         return this;
     }
@@ -11,7 +11,7 @@ class EventEmitter {
     }
 
     removeListener(eventName, fn) {
-        let suitableListeners = this.listeners[eventName];
+        const suitableListeners = this.listeners[eventName];
         if (!suitableListeners) return this;
         for (let i = suitableListeners.length; i > 0; i--) {
             if (suitableListeners[i] === fn) {
@@ -27,7 +27,7 @@ class EventEmitter {
     }
 
     once(eventName, fn) {
-        this.listeners[eventName] = this.listeners[eventName] || [];
+        this.listeners[eventName] = this.listeners[eventName] ?? [];
         const onceWrapper = () => {
             fn();
             this.off(eventName, onceWrapper);
@@ -37,7 +37,7 @@ class EventEmitter {
     }
 
     emit(eventName, ...args) {
-        let suitableListeners = this.listeners[eventName];
+        const suitableListeners = this.listeners[eventName];
         if (!suitableListeners) return false;
         suitableListeners.forEach((f) => {
             f(...args);
@@ -46,7 +46,7 @@ class EventEmitter {
     }
 
     listenerCount(eventName) {
-        let suitableListeners = this.listeners[eventName] || [];
+        const suitableListeners = this.listeners[eventName] ?? [];
         return suitableListeners.length;
     }
 

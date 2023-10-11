@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
+    "module_2": "node activityMonitor.js",
     "task1": "node module_3/eventEmitter.js",
     "task2": "node module_3/withTime.js",
     "test": "jest",
