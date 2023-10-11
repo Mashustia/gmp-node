@@ -9,6 +9,7 @@
     "task1": "node module_3/eventEmitter.js",
     "task2": "node module_3/withTime.js",
     "test": "jest",
+    "module_5": "nodemon --esm src/module_5/server.ts",
     "test:coverage": "jest --coverage"
   },
   "repository": {
@@ -28,6 +29,7 @@
   "type": "module",
   "devDependencies": {
     "@types/jest": "29.5.5",
+    "@types/node": "20.8.0",
     "@types/supertest": "2.0.12",
     "jest": "29.7.0",
     "supertest": "6.3.3",
