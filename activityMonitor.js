@@ -1,7 +1,7 @@
-const { EventEmitter } = require('events');
-const fs = require('fs');
-const os = require('os');
-const { exec } = require('node:child_process');
+import EventEmitter from 'events';
+import fs from 'fs';
+import os from 'os';
+import {exec} from 'child_process';
 
 const UPDATE_INTERVAL = 7500; // 8 times per minute
 const MAX_DURATION = 100000000;
