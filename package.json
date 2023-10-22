@@ -1,0 +1,22 @@
+{
+  "name": "gmp-node",
+  "version": "0.0.1",
+  "description": "Project developed during GMP node course.",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mashustia/gmp-node.git"
+  },
+  "keywords": [],
+  "author": "Mashustia",
+  "bugs": {
+    "url": "https://github.com/Mashustia/gmp-node/issues"
+  },
+  "homepage": "https://github.com/Mashustia/gmp-node#readme",
+  "dependencies": {
+    "nodemon": "3.0.1"
+  }
+}
