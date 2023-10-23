@@ -24,6 +24,10 @@
   },
   "homepage": "https://github.com/Mashustia/gmp-node#readme",
   "dependencies": {
+    "@mikro-orm/core": "5.8.10",
+    "@mikro-orm/mariadb": "5.8.10",
+    "@mikro-orm/postgresql": "5.8.10",
+    "@mikro-orm/sqlite": "5.8.10",
     "axios": "1.5.0",
     "body-parser": "1.20.2",
     "express": "4.18.2",
@@ -44,5 +48,12 @@
     "ts-jest": "29.1.1",
     "ts-node": "^10.9.1",
     "typescript": "5.2.2"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/module_7/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   }
 }
