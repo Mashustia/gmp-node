@@ -1,10 +1,13 @@
-import products, { ProductEntity } from '../dataBase/products';
+import { orm } from '../app';
+import Product from '../../module_7/entities/product';
 
-const getProductsList = (): ProductEntity[] => products;
-const getProductById = (productId: string): ProductEntity | null => {
-    const product = products.find((item) => item.id === productId)
+const getProductsList = async (): Promise<Product[]> => {
+    const products = await orm.em.find(Product, {});
+    return products;
+};
+const getProductById = async (productId: string): Promise<Product | null> => {
+    const product = await orm.em.findOne(Product, { id: productId });
     if (product) {
-        products.push(product);
         return product
     }
 

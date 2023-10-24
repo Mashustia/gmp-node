@@ -8,21 +8,22 @@ import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import config from '../module_7/mikro-orm.config';
 
+export const DI = {};
 const app = express();
-const orm = await MikroORM.init<PostgreSqlDriver>(config);
-
-app.listen(PORT, () => {
-    console.log('Server is started');
-})
+export const orm = await MikroORM.init<PostgreSqlDriver>(config);
 
 app.use(express.json())
+app.use(bodyParser.json())
 app.use((req, res, next) => {
     RequestContext.create(orm.em, next);
 });
-app.use(bodyParser.json())
 
 app.use(Path.cart, auth, cartRouter);
 app.use(Path.products, auth, productsRouter);
 
 app.use(errorHandler);
 app.use(logger);
+
+app.listen(PORT, () => {
+    console.log('Server is started');
+})

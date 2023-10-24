@@ -1,11 +1,14 @@
-import carts, { CartsEntity } from '../dataBase/carts'
+import { CartsEntity } from '../dataBase/carts'
 import {
-    createNewCart, fetchCartAndTotalPrice,
+    fetchCartAndTotalPrice,
     getOrderData,
-    getUserCartAndActiveCartId,
 } from '../utils';
-import products, { ProductEntity } from '../dataBase/products';
-import { OrderEntity, orders } from '../dataBase/orders';
+import { ProductEntity } from '../dataBase/products';
+import { orm } from '../app';
+import Cart from '../../module_7/entities/cart';
+import User from '../../module_7/entities/user';
+import { getProductsList } from './product';
+import Order from '../../module_7/entities/order';
 
 export interface Product {
     productId: string
@@ -17,47 +20,67 @@ export interface CartTemplate {
     total: number
 }
 
-const getUserCart = (userId: string): CartTemplate => {
-    const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
-    if (activeCartId) {
-        return fetchCartAndTotalPrice(userCarts[activeCartId]);
+const getActiveCart = async (userId: string): Promise<Cart | null> => {
+    const user = await orm.em.findOneOrFail(User, userId);
+    const cart = await orm.em.findOne(Cart, { user, isDeleted: false });
+
+    return cart;
+}
+
+export const createCart = async (userId: string): Promise<Cart> => {
+    const user = await orm.em.findOneOrFail(User, userId);
+    const newCart = new Cart(user);
+    await orm.em.persistAndFlush(newCart);
+
+    return newCart;
+};
+
+const getUserCart = async (userId: string): Promise<CartTemplate> => {
+    const activeCart = await getActiveCart(userId);
+
+    if (activeCart) {
+        return fetchCartAndTotalPrice(activeCart);
     }
+    const newCart = await createCart(userId);
     return {
-        cart: createNewCart(),
+        cart: newCart,
         total: 0
     }
 }
 
-const updateUserCart = (userId: string, product: Product): CartTemplate | null => {
-    const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
-    if (activeCartId) {
-        const activeCart = userCarts[activeCartId];
+const updateUserCart = async (userId: string, product: Product): Promise<CartTemplate | null> => {
+    const activeCart = await getActiveCart(userId);
+
+    if (activeCart) {
         const productIndex = activeCart.items.findIndex((item) => item.product.id === product.productId)
         const productIsInCart = productIndex !== -1;
         const needToDeleteProduct = product.count === 0;
         if (productIsInCart && needToDeleteProduct) {
             activeCart.items = activeCart.items.filter((item) => item.product.id !== product.productId);
-            userCarts[activeCartId] = activeCart;
+            await orm.em.persistAndFlush(activeCart);
 
-            return fetchCartAndTotalPrice(userCarts[activeCartId]);
+            return fetchCartAndTotalPrice(activeCart);
         }
 
         if (productIsInCart) {
             const updatedProduct = activeCart.items[productIndex];
             updatedProduct.count = product.count;
             activeCart.items = activeCart.items.splice(productIndex, 1, updatedProduct);
-            userCarts[activeCartId] = activeCart;
 
-            return fetchCartAndTotalPrice(userCarts[activeCartId]);
+            await orm.em.persistAndFlush(activeCart);
+
+            return fetchCartAndTotalPrice(activeCart);
         }
 
+        const products = await getProductsList();
         const productFullData: ProductEntity | undefined = products.find((item) => item.id === product.productId);
         if (productFullData) {
             activeCart.items.push({
                 product: productFullData,
                 count: product.count
             });
-            userCarts[activeCartId] = activeCart;
+            await orm.em.persistAndFlush(activeCart);
+
             return fetchCartAndTotalPrice(activeCart);
         }
 
@@ -66,25 +89,26 @@ const updateUserCart = (userId: string, product: Product): CartTemplate | null =
     return null;
 }
 
-const emptyUserCart = (userId: string): boolean => {
-    const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
-    if (activeCartId) {
-        const activeCart = userCarts[activeCartId];
+const emptyUserCart = async (userId: string): Promise<boolean> => {
+    const activeCart = await getActiveCart(userId);
+    if (activeCart) {
         activeCart.items = [];
-        userCarts[activeCartId] = activeCart;
+        await orm.em.persistAndFlush(activeCart);
 
         return true;
     }
     return false;
 }
 
-const createOrder = (userId: string): OrderEntity | null => {
-    const { userCarts, activeCartId } = getUserCartAndActiveCartId({ carts, userId });
-    if (activeCartId) {
-        const cart = userCarts[activeCartId];
-        const order = getOrderData(userId, cart);
-        orders.push(order);
-        return order;
+const createOrder = async (userId: string): Promise<Order | null> => {
+    const user = await orm.em.findOneOrFail(User, userId);
+    const activeCart = await getActiveCart(userId);
+    if (activeCart) {
+        const orderData = getOrderData(user, activeCart);
+        const newOrder = orm.em.create(Order, orderData);
+        await orm.em.persistAndFlush(newOrder);
+
+        return newOrder;
     }
     return null;
 }

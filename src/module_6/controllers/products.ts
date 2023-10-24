@@ -30,14 +30,6 @@ const getProductController = async (req: Request, res: Response) => {
         })
     }
 
-    if (!productId) {
-        getErrorMessage({
-            res,
-            statusCode: StatusCode.BAD_REQUEST,
-            message: errorMessage.products_not_valid
-        })
-    }
-
     if (userId && productId) {
         const product = await getProduct(productId);
 

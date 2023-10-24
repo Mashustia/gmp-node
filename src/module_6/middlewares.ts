@@ -35,6 +35,7 @@ export const auth = async (
 
         const user = await fetchUserController(userId);
 
+
         if (isNull(user)) {
             return getErrorMessage({
                 res,
