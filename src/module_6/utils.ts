@@ -1,21 +1,10 @@
 import { Request, Response } from 'express';
-import { findKey, pick } from 'lodash-es';
+import { pick } from 'lodash-es';
 import {
     CartItemEntity,
-    Carts,
-    DeletedAndActiveCarts,
 } from './dataBase/carts';
 import Cart from '../module_7/entities/cart';
 import User from '../module_7/entities/user';
-
-export const getUserCartAndActiveCartId = (
-    { carts, userId }: { carts: Carts, userId: string }
-): { userCarts: DeletedAndActiveCarts, activeCartId: string | undefined } => {
-    const userCarts = carts[userId];
-    const activeCartId = findKey(userCarts, ['isDeleted', false]);
-    return { userCarts, activeCartId }
-}
-
 export const getTotalPrice = (items: CartItemEntity[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
 

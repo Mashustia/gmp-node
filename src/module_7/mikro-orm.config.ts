@@ -8,7 +8,11 @@ import Product from './entities/product';
 const config: Options<PostgreSqlDriver> = {
     entities: [User, Order, Cart, Product], // no need for `entitiesTs` this way
     dbName: 'my-db-name',
-    type: 'postgresql', // one of `mongo` | `mysql` | `mariadb` | `postgresql` | `sqlite`
+    type: 'postgresql', // one of `mongo` | `mysql` | `mariadb` | `postgresql` | `sqlite`,
+    migrations: {
+        path: '../../dist/module_7/migrations',
+        pathTs: '../../src/module_7/migrations',
+    },
 };
 
 export default config;

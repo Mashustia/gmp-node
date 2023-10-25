@@ -26,6 +26,7 @@
   "dependencies": {
     "@mikro-orm/core": "5.8.10",
     "@mikro-orm/mariadb": "5.8.10",
+    "@mikro-orm/migrations": "5.9.0",
     "@mikro-orm/postgresql": "5.8.10",
     "@mikro-orm/seeder": "5.8.10",
     "@mikro-orm/sqlite": "5.8.10",
@@ -54,7 +55,7 @@
     "useTsNode": true,
     "configPaths": [
       "./src/module_7/mikro-orm.config.ts",
-      "./dist/mikro-orm.config.js"
+      "./dist/module_7/mikro-orm.config.js"
     ]
   }
 }
