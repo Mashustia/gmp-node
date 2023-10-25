@@ -9,6 +9,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import Cart from './cart';
 import Order from './order';
+import { CartModel } from './types';
 
 @Entity()
 class User {
@@ -19,7 +20,7 @@ class User {
     email!: string;
 
     @OneToOne(() => Cart, { nullable: true })
-    cart?: Cart;
+    cart?: CartModel;
 
     @OneToMany(() => Order, (order) => order.user)
     orders = new Collection<Order>(this);

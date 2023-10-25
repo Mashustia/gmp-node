@@ -2,6 +2,7 @@ import { Entity, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
 import { v4 as uuidv4 } from 'uuid';
 import User from './user';
 import { CartItemEntity } from '../../module_6/dataBase/carts';
+import { UserModel } from './types';
 
 @Entity()
 class Order {
@@ -9,7 +10,7 @@ class Order {
     id: string = uuidv4();
 
     @ManyToOne(() => User)
-    user!: User;
+    user!: UserModel;
 
     @Property()
     cartId: string;
@@ -40,7 +41,7 @@ class Order {
     total: number;
 
     constructor(
-        user: User,
+        user: UserModel,
         cartId: string,
         items: CartItemEntity[],
         payment: {

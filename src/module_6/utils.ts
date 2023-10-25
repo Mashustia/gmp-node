@@ -4,11 +4,11 @@ import {
     CartItemEntity,
 } from './dataBase/carts';
 import Cart from '../module_7/entities/cart';
-import User from '../module_7/entities/user';
+import { UserModel } from '../module_7/entities/types';
 export const getTotalPrice = (items: CartItemEntity[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
 
-export const getOrderData = (user: User, { id, items }: Cart) => ({
+export const getOrderData = (user: UserModel, { id, items }: Cart) => ({
     user,
     cartId: id,
     items: items,

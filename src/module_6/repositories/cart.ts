@@ -4,11 +4,11 @@ import {
     getOrderData,
 } from '../utils';
 import { ProductEntity } from '../dataBase/products';
-import { orm } from '../app';
+import { DI } from '../app';
 import Cart from '../../module_7/entities/cart';
-import User from '../../module_7/entities/user';
 import { getProductsList } from './product';
 import Order from '../../module_7/entities/order';
+import { getUser } from './users';
 
 export interface Product {
     productId: string
@@ -21,31 +21,38 @@ export interface CartTemplate {
 }
 
 const getActiveCart = async (userId: string): Promise<Cart | null> => {
-    const user = await orm.em.findOneOrFail(User, userId);
-    const cart = await orm.em.findOne(Cart, { user, isDeleted: false });
+    const user = await getUser(userId);
+    const cart = await DI.cart.findOne({ user, isDeleted: false });
 
     return cart;
 }
 
-export const createCart = async (userId: string): Promise<Cart> => {
-    const user = await orm.em.findOneOrFail(User, userId);
-    const newCart = new Cart(user);
-    await orm.em.persistAndFlush(newCart);
+export const createCart = async (userId: string): Promise<Cart | null> => {
+    const user = await getUser(userId);
+    if (user) {
+        const newCart = new Cart(user);
+        await DI.em.persistAndFlush(newCart);
 
-    return newCart;
+        return newCart;
+    }
+    return null;
 };
 
-const getUserCart = async (userId: string): Promise<CartTemplate> => {
+const getUserCart = async (userId: string): Promise<CartTemplate | null> => {
     const activeCart = await getActiveCart(userId);
 
     if (activeCart) {
         return fetchCartAndTotalPrice(activeCart);
     }
+
     const newCart = await createCart(userId);
-    return {
-        cart: newCart,
-        total: 0
+    if (newCart) {
+        return {
+            cart: newCart,
+            total: 0
+        }
     }
+    return null;
 }
 
 const updateUserCart = async (userId: string, product: Product): Promise<CartTemplate | null> => {
@@ -57,7 +64,7 @@ const updateUserCart = async (userId: string, product: Product): Promise<CartTem
         const needToDeleteProduct = product.count === 0;
         if (productIsInCart && needToDeleteProduct) {
             activeCart.items = activeCart.items.filter((item) => item.product.id !== product.productId);
-            await orm.em.persistAndFlush(activeCart);
+            await DI.em.persistAndFlush(activeCart);
 
             return fetchCartAndTotalPrice(activeCart);
         }
@@ -67,7 +74,7 @@ const updateUserCart = async (userId: string, product: Product): Promise<CartTem
             updatedProduct.count = product.count;
             activeCart.items = activeCart.items.splice(productIndex, 1, updatedProduct);
 
-            await orm.em.persistAndFlush(activeCart);
+            await DI.em.persistAndFlush(activeCart);
 
             return fetchCartAndTotalPrice(activeCart);
         }
@@ -79,7 +86,7 @@ const updateUserCart = async (userId: string, product: Product): Promise<CartTem
                 product: productFullData,
                 count: product.count
             });
-            await orm.em.persistAndFlush(activeCart);
+            await DI.em.persistAndFlush(activeCart);
 
             return fetchCartAndTotalPrice(activeCart);
         }
@@ -93,7 +100,7 @@ const emptyUserCart = async (userId: string): Promise<boolean> => {
     const activeCart = await getActiveCart(userId);
     if (activeCart) {
         activeCart.items = [];
-        await orm.em.persistAndFlush(activeCart);
+        await DI.em.persistAndFlush(activeCart);
 
         return true;
     }
@@ -101,12 +108,12 @@ const emptyUserCart = async (userId: string): Promise<boolean> => {
 }
 
 const createOrder = async (userId: string): Promise<Order | null> => {
-    const user = await orm.em.findOneOrFail(User, userId);
+    const user = await getUser(userId);
     const activeCart = await getActiveCart(userId);
-    if (activeCart) {
+    if (activeCart && user) {
         const orderData = getOrderData(user, activeCart);
-        const newOrder = orm.em.create(Order, orderData);
-        await orm.em.persistAndFlush(newOrder);
+        const newOrder = DI.em.create(Order, orderData);
+        await DI.em.persistAndFlush(newOrder);
 
         return newOrder;
     }
