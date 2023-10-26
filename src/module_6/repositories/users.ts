@@ -1,7 +1,8 @@
-import { users, UsersEntity } from '../dataBase/users';
+import { DI } from '../../../app';
+import User from '../../module_7/entities/user';
 
-const getUser = (userId: string): UsersEntity | null => {
-    const user = users.find((item) => item.id === userId);
+const getUser = async (userId: string): Promise<User | null> => {
+    const user = await DI.user.findOne(userId);
     if (user) {
         return user
     }

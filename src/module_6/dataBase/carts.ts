@@ -7,7 +7,7 @@ export interface CartItemEntity {
 
 export interface CartsEntity {
     id: string; // uuid
-    userId: string;
+    user: string;
     isDeleted: boolean;
     items: CartItemEntity[];
 }
@@ -30,7 +30,7 @@ const cartId = '1434fec6-cd85-420d-95c0-eee2301a971d';
 
 export const cart: CartsEntity = {
     id: cartId,
-    userId,
+    user: userId,
     isDeleted: false,
     items: [cartItem],
 }

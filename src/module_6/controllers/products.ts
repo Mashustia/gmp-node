@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { getErrorMessage, getSuccessMessage, getXUserHeader } from '../utils';
 import { getProduct, getProducts } from '../services/products';
 import { StatusCode } from '../../module_5/const';
-import { isNil } from 'lodash-es';
 import { errorMessage } from '../consts';
 
 const getProductsController = async (req: Request, res: Response) => {
@@ -30,18 +29,10 @@ const getProductController = async (req: Request, res: Response) => {
         })
     }
 
-    if (!productId) {
-        getErrorMessage({
-            res,
-            statusCode: StatusCode.BAD_REQUEST,
-            message: errorMessage.products_not_valid
-        })
-    }
-
     if (userId && productId) {
         const product = await getProduct(productId);
 
-        if (!isNil(productId)) {
+        if (product !== null) {
             return getSuccessMessage({
                 res,
                 statusCode: StatusCode.OK,

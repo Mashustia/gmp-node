@@ -10,14 +10,14 @@ const product_2_id = '1b745aab-8396-4c34-aeab-4766933af045';
 
 export const product_1: ProductEntity = {
     id: product_1_id,
-    title: 'Book',
+    title: 'Book 1',
     description: 'A very interesting book',
     price: 100
 }
 
 export const product_2: ProductEntity = {
     id: product_2_id,
-    title: 'Book',
+    title: 'Book 2',
     description: 'Not very interesting book',
     price: 250
 }

@@ -1,10 +1,13 @@
-import products, { ProductEntity } from '../dataBase/products';
+import { DI } from '../../../app';
+import Product from '../../module_7/entities/product';
 
-const getProductsList = (): ProductEntity[] => products;
-const getProductById = (productId: string): ProductEntity | null => {
-    const product = products.find((item) => item.id === productId)
+const getProductsList = async (): Promise<Product[]> => {
+    const products = await DI.product.findAll();
+    return products;
+};
+const getProductById = async (productId: string): Promise<Product | null> => {
+    const product = await DI.product.findOne(productId);
     if (product) {
-        products.push(product);
         return product
     }
 

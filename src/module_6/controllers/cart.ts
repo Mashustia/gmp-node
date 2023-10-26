@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { getErrorMessage, getSuccessMessage, getXUserHeader } from '../utils';
 import { StatusCode } from '../../module_5/const';
 import { clearCart, getCart, checkoutCart, updateCart } from '../services/cart';
-import { isNil } from 'lodash-es';
 import { errorMessage } from '../consts';
 
 const getCartController = async (req: Request, res: Response) => {
@@ -25,7 +24,7 @@ const updateCartController = async (req: Request, res: Response) => {
     if (userId) {
         const updatedCart = await updateCart(userId, cart);
 
-        if (!isNil(updatedCart)) {
+        if (updatedCart !== null) {
             return getSuccessMessage({
                 res,
                 statusCode: StatusCode.OK,
@@ -71,7 +70,7 @@ const checkoutCartController = async (req: Request, res: Response) => {
     if (userId) {
         const order = await checkoutCart(userId);
 
-        if (!isNil(order)) {
+        if (order !== null) {
             return getSuccessMessage({
                 res,
                 statusCode: StatusCode.OK,

@@ -1,36 +1,14 @@
 import { Request, Response } from 'express';
-import { findKey, pick } from 'lodash-es';
-import { v4 as uuidv4 } from 'uuid';
 import {
     CartItemEntity,
-    Carts,
-    CartsEntity,
-    DeletedAndActiveCarts,
 } from './dataBase/carts';
-import { OrderEntity } from './dataBase/orders';
-
-export const createNewCart = (): Omit<CartsEntity, 'userId'> => ({
-    id: uuidv4(),
-    isDeleted: false,
-    items: []
-})
-
-export const getUserCartAndActiveCartId = (
-    { carts, userId }: { carts: Carts, userId: string }
-): { userCarts: DeletedAndActiveCarts, activeCartId: string | undefined } => {
-    const userCarts = carts[userId];
-    const activeCartId = findKey(userCarts, ['isDeleted', false]);
-    return { userCarts, activeCartId }
-}
-
-export const modifyUserCart = (cart: CartsEntity): Omit<CartsEntity, 'userId'> => pick(cart, ['id', 'isDeleted', 'items']);
-
+import Cart from '../module_7/entities/cart';
+import { UserModel } from '../module_7/entities/types';
 export const getTotalPrice = (items: CartItemEntity[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
 
-export const getOrderData = (userId: string, { id, items }: Omit<CartsEntity, 'userId'>): OrderEntity => ({
-    id: uuidv4(),
-    userId,
+export const getOrderData = (user: UserModel, { id, items }: Cart) => ({
+    user,
     cartId: id,
     items: items,
     payment: {
@@ -64,9 +42,9 @@ export const getSuccessMessage = <T>(
 
 export const getXUserHeader = (req: Request) => req.header('x-user-id');
 
-export const fetchCartItemsUserIdExcluded = (cart: CartsEntity) => pick(cart, ['id', 'items']);
+export const fetchCartItemsUserIdExcluded = ({ id, items}: Cart) => ({ id, items });
 
-export const fetchCartAndTotalPrice = (cart: CartsEntity) => ({
+export const fetchCartAndTotalPrice = (cart: Cart) => ({
     cart: fetchCartItemsUserIdExcluded(cart),
     total: getTotalPrice(cart.items)
 });
