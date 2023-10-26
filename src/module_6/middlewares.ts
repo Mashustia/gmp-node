@@ -1,4 +1,3 @@
-import { isNull } from 'lodash-es';
 import { NextFunction, Request, Response } from 'express';
 import { getErrorMessage, getXUserHeader } from './utils';
 import { StatusCode } from '../module_5/const';
@@ -36,7 +35,7 @@ export const auth = async (
         const user = await fetchUserController(userId);
 
 
-        if (isNull(user)) {
+        if (user === null) {
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.UNAUTHORIZED,

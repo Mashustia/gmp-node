@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "es2022",
+    "module": "commonjs",
     "declaration": true,
-    "lib": ["es6"],
+    "lib": ["es2022"],
     "outDir": "dist",
     "strict": true,
     "noImplicitAny": true,
@@ -15,12 +15,5 @@
   },
   "exclude": [
     "node_modules"
-  ],
-  "devDependencies": {
-    "nodemon": "^2.0.22"
-  },
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node",
-  }
+  ]
 }

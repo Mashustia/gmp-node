@@ -13,12 +13,10 @@ const config: Options<PostgreSqlDriver> = {
     host: 'localhost',
     type: 'postgresql',
     migrations: {
-        path: '../../dist/module_7/migrations',
-        pathTs: '../../src/module_7/migrations',
+        pathTs: './src/module_7/migrations',
     },
     seeder: {
-        path: '../../dist/module_7/seeders',
-        pathTs: '../../src/module_7/seeders',
+        pathTs: './src/module_7/seeders',
     },
 };
 

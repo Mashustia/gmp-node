@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { pick } from 'lodash-es';
 import {
     CartItemEntity,
 } from './dataBase/carts';
@@ -43,7 +42,7 @@ export const getSuccessMessage = <T>(
 
 export const getXUserHeader = (req: Request) => req.header('x-user-id');
 
-export const fetchCartItemsUserIdExcluded = (cart: Cart) => pick(cart, ['id', 'items']);
+export const fetchCartItemsUserIdExcluded = ({ id, items}: Cart) => ({ id, items });
 
 export const fetchCartAndTotalPrice = (cart: Cart) => ({
     cart: fetchCartItemsUserIdExcluded(cart),
