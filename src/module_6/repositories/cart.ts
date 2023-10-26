@@ -3,10 +3,9 @@ import {
     fetchCartAndTotalPrice,
     getOrderData,
 } from '../utils';
-import { ProductEntity } from '../dataBase/products';
 import { DI } from '../../../app';
 import Cart from '../../module_7/entities/cart';
-import { getProductsList } from './product';
+import { getProductById } from './product';
 import Order from '../../module_7/entities/order';
 import { getUser } from './users';
 
@@ -57,7 +56,6 @@ const getUserCart = async (userId: string): Promise<CartTemplate | null> => {
 
 const updateUserCart = async (userId: string, product: Product): Promise<CartTemplate | null> => {
     const activeCart = await getActiveCart(userId);
-
     if (activeCart) {
         const productIndex = activeCart.items.findIndex((item) => item.product.id === product.productId)
         const productIsInCart = productIndex !== -1;
@@ -70,22 +68,21 @@ const updateUserCart = async (userId: string, product: Product): Promise<CartTem
         }
 
         if (productIsInCart) {
-            const updatedProduct = activeCart.items[productIndex];
-            updatedProduct.count = product.count;
-            activeCart.items = activeCart.items.splice(productIndex, 1, updatedProduct);
-
+            activeCart.items[productIndex].count = activeCart.items[productIndex].count + product.count;
             await DI.em.persistAndFlush(activeCart);
 
             return fetchCartAndTotalPrice(activeCart);
         }
 
-        const products = await getProductsList();
-        const productFullData: ProductEntity | undefined = products.find((item) => item.id === product.productId);
-        if (productFullData) {
-            activeCart.items.push({
-                product: productFullData,
-                count: product.count
-            });
+        const productFullInfo = await getProductById(product.productId)
+        if (productFullInfo) {
+            activeCart.items = [
+                ...activeCart.items,
+                {
+                    product: productFullInfo,
+                    count: product.count
+                }
+            ]
             await DI.em.persistAndFlush(activeCart);
 
             return fetchCartAndTotalPrice(activeCart);
