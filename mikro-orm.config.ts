@@ -1,9 +1,9 @@
 import { Options } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import Cart from './entities/cart';
-import Order from './entities/order';
-import Product from './entities/product';
-import User from './entities/user';
+import Cart from './src/module_7/entities/cart';
+import Order from './src/module_7/entities/order';
+import Product from './src/module_7/entities/product';
+import User from './src/module_7/entities/user';
 
 const config: Options<PostgreSqlDriver> = {
     entities: [User, Cart, Order, Product],

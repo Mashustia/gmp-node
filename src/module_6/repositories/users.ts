@@ -1,4 +1,4 @@
-import { DI } from '../app';
+import { DI } from '../../../app';
 import User from '../../module_7/entities/user';
 
 const getUser = async (userId: string): Promise<User | null> => {

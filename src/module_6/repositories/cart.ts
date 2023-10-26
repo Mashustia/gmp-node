@@ -4,7 +4,7 @@ import {
     getOrderData,
 } from '../utils';
 import { ProductEntity } from '../dataBase/products';
-import { DI } from '../app';
+import { DI } from '../../../app';
 import Cart from '../../module_7/entities/cart';
 import { getProductsList } from './product';
 import Order from '../../module_7/entities/order';

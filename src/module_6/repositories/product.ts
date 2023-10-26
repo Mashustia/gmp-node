@@ -1,4 +1,4 @@
-import { DI } from '../app';
+import { DI } from '../../../app';
 import Product from '../../module_7/entities/product';
 
 const getProductsList = async (): Promise<Product[]> => {
