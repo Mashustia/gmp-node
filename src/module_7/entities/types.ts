@@ -1,6 +1,4 @@
 import { CartItemEntity } from '../../module_6/dataBase/carts';
-import { Collection } from '@mikro-orm/core';
-import Order from './order';
 
 interface CartModel {
     id: string
@@ -32,7 +30,7 @@ interface UserModel {
     id: string
     email: string
     cart?: CartModel
-    orders: Collection<Order>
+    orders: OrderModel[]
 }
 
 export { UserModel, CartModel, OrderModel}

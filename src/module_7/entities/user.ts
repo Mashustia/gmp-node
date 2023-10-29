@@ -1,33 +1,49 @@
-import {
-    Collection,
-    Entity,
-    OneToMany,
-    OneToOne,
-    PrimaryKey,
-    Property,
-} from '@mikro-orm/core';
-import { v4 as uuidv4 } from 'uuid';
-import Cart from './cart';
-import Order from './order';
-import { CartModel } from './types';
+import { Schema, model } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 
-@Entity()
-class User {
-    @PrimaryKey()
-    id: string = uuidv4();
+import { CartSchema } from './cart';
+import { OrderSchema } from './order';
 
-    @Property()
-    email!: string;
+const UserSchema = new Schema({
+    _id: {
+        type: String,
+        default: () => uuid(),
+        alias: 'id',
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    cart: {
+        type: CartSchema,
+        required: true,
+    },
+    orders: {
+        type: [OrderSchema],
+        required: true,
+    },
+});
 
-    @OneToOne(() => Cart, { nullable: true })
-    cart?: CartModel;
+model('User', UserSchema);
 
-    @OneToMany(() => Order, (order) => order.user)
-    orders = new Collection<Order>(this);
-
-    constructor(email: string) {
-        this.email = email;
-    }
-}
-
-export default User;
+// @Entity()
+// class User {
+//     @PrimaryKey()
+//     id: string = uuidv4();
+//
+//     @Property()
+//     email!: string;
+//
+//     @OneToOne(() => Cart, { nullable: true })
+//     cart?: CartModel;
+//
+//     @OneToMany(() => Order, (order) => order.user)
+//     orders = new Collection<Order>(this);
+//
+//     constructor(email: string) {
+//         this.email = email;
+//     }
+// }
+//
+// export default User;
