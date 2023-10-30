@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
-import {
-    CartItemEntity,
-} from './dataBase/carts';
-import Cart from '../module_7/entities/cart';
-import { UserModel } from '../module_7/entities/types';
-export const getTotalPrice = (items: CartItemEntity[]): number => items
+
+import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from '../module_7/entities/types';
+
+export const getTotalPrice = (items: CartItemModel[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
 
-export const getOrderData = (user: UserModel, { id, items }: Cart) => ({
-    user,
-    cartId: id,
+export const getOrderData = (user: UserModel, { _id, items }: CartModelAndMethods) => ({
+    userId: user.id,
+    cartId: _id,
     items: items,
     payment: {
         type: 'paypal',
@@ -18,7 +16,7 @@ export const getOrderData = (user: UserModel, { id, items }: Cart) => ({
     },
     delivery: {
         type: 'post',
-        address: undefined
+        address: 'some address'
     },
     comments: '',
     status: 'created',
@@ -42,9 +40,12 @@ export const getSuccessMessage = <T>(
 
 export const getXUserHeader = (req: Request) => req.header('x-user-id');
 
-export const fetchCartItemsUserIdExcluded = ({ id, items}: Cart) => ({ id, items });
+export const fetchCartItemsUserIdExcluded = ({ _id, items }: CartModelAndMethods) => ({
+    id: _id,
+    items
+});
 
-export const fetchCartAndTotalPrice = (cart: Cart) => ({
+export const fetchCartAndTotalPrice = (cart: CartModelAndMethods): CartTemplate => ({
     cart: fetchCartItemsUserIdExcluded(cart),
     total: getTotalPrice(cart.items)
 });

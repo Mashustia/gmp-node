@@ -1,25 +1,22 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
-import { v4 as uuidv4 } from 'uuid';
+import { Schema, model } from 'mongoose';
 
-@Entity()
-class Product {
-    @PrimaryKey()
-    id: string = uuidv4();
+import { ProductModel } from './types';
 
-    @Property()
-    title!: string;
+export const ProductSchema = new Schema<ProductModel>({
+    title: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+});
 
-    @Property()
-    description!: string;
-
-    @Property()
-    price!: number;
-
-    constructor(title: string, description: string, price: number) {
-        this.title = title;
-        this.description = description;
-        this.price = price;
-    }
-}
+const Product = model<ProductModel>('Product', ProductSchema);
 
 export default Product;

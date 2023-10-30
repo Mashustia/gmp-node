@@ -1,5 +1,5 @@
-import { getUser } from '../repositories/users';
+import { fetchUser } from '../services/users';
 
-const fetchUser = (userId: string) => getUser(userId)
+const fetchUserController = (userId: string) => fetchUser(userId)
 
-export { fetchUser };
+export { fetchUserController };

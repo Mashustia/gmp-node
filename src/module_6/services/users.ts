@@ -1,5 +1,5 @@
-import { fetchUser } from '../controllers/users';
+import { getUser } from '../repositories/users';
 
-const fetchUserController = async (userId: string) => await fetchUser(userId);
+const fetchUser = async (userId: string) => await getUser(userId);
 
-export { fetchUserController }
+export { fetchUser }

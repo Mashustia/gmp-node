@@ -1,12 +1,22 @@
-import { CartItemEntity } from '../../module_6/dataBase/carts';
-import { Collection } from '@mikro-orm/core';
-import Order from './order';
+import { Document, Model, ObjectId } from 'mongoose';
 
-interface CartModel {
-    id: string
-    isDeleted: boolean
-    items: CartItemEntity[]
-    user: string
+interface ProductModel extends Document {
+    _id: ObjectId
+    title: string
+    description: string
+    price: number
+}
+
+interface CartItemModel {
+    product: ProductModel
+    count: number
+}
+
+interface OrderModel extends Document {
+    _id: ObjectId
+    userId: ObjectId
+    cartId: ObjectId
+    items: CartItemModel[]
     payment: {
         type: string
         address?: string
@@ -21,18 +31,47 @@ interface CartModel {
     total: number
 }
 
-interface OrderModel {
-    id: string
-    user: string
-    cartId: string
-    items: CartItemEntity[];
+interface ICart extends Document {
+    _id: ObjectId
+    user: ObjectId
+    isDeleted: boolean
+    items: CartItemModel[]
 }
 
-interface UserModel {
-    id: string
+interface ICartMethods {
+    clearCart(): void
+}
+
+type CartModel = Model<ICart, {}, ICartMethods>
+type CartModelAndMethods = ICart & ICartMethods
+
+interface UserModel extends Document {
+    _id: ObjectId
     email: string
-    cart?: CartModel
-    orders: Collection<Order>
 }
 
-export { UserModel, CartModel, OrderModel}
+interface ProductData {
+    productId: string
+    count: number
+}
+
+interface CartTemplate {
+    cart: {
+        id: ObjectId
+        items: CartItemModel[]
+    }
+    total: number
+}
+
+export {
+    UserModel,
+    ICart,
+    ICartMethods,
+    CartModel,
+    CartModelAndMethods,
+    OrderModel,
+    ProductModel,
+    CartItemModel,
+    ProductData,
+    CartTemplate,
+}

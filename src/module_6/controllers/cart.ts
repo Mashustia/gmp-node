@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { getErrorMessage, getSuccessMessage, getXUserHeader } from '../utils';
 import { StatusCode } from '../../module_5/const';
-import { clearCart, getCart, checkoutCart, updateCart } from '../services/cart';
+import { clearCart, getCart, updateCart } from '../services/cart';
 import { errorMessage } from '../consts';
+import { checkoutCart } from '../services/order';
 
 const getCartController = async (req: Request, res: Response) => {
     const userId = getXUserHeader(req);

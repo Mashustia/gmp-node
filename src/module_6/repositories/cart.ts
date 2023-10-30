@@ -1,40 +1,27 @@
-import { CartsEntity } from '../dataBase/carts'
 import {
     fetchCartAndTotalPrice,
-    getOrderData,
 } from '../utils';
-import { DI } from '../../../app';
-import Cart from '../../module_7/entities/cart';
 import { getProductById } from './product';
-import Order from '../../module_7/entities/order';
-import { getUser } from './users';
+import {
+    CartTemplate,
+    ProductData,
+    CartModelAndMethods
+} from '../../module_7/entities/types';
+import Cart from '../../module_7/entities/cart';
 
-export interface Product {
-    productId: string
-    count: number
+const getActiveCart = async (userId: string): Promise<CartModelAndMethods | null> => {
+    return await Cart.findOne({ user: userId, isDeleted: false }).exec();
 }
 
-export interface CartTemplate {
-    cart: Pick<CartsEntity, 'id' | 'items'>
-    total: number
-}
+export const createCart = async (userId: string): Promise<CartModelAndMethods | null> => {
+    const newCart = new Cart({
+        user: userId,
+        items: [],
+    });
 
-const getActiveCart = async (userId: string): Promise<Cart | null> => {
-    const user = await getUser(userId);
-    const cart = await DI.cart.findOne({ user, isDeleted: false });
-
-    return cart;
-}
-
-export const createCart = async (userId: string): Promise<Cart | null> => {
-    const user = await getUser(userId);
-    if (user) {
-        const newCart = new Cart(user);
-        await DI.em.persistAndFlush(newCart);
-
-        return newCart;
-    }
-    return null;
+    return await newCart.save()
+        .then(savedCart => savedCart)
+        .catch(err => null)
 };
 
 const getUserCart = async (userId: string): Promise<CartTemplate | null> => {
@@ -45,16 +32,20 @@ const getUserCart = async (userId: string): Promise<CartTemplate | null> => {
     }
 
     const newCart = await createCart(userId);
+
     if (newCart) {
         return {
-            cart: newCart,
+            cart: {
+                ...newCart,
+                id: newCart._id
+            },
             total: 0
         }
     }
     return null;
 }
 
-const updateUserCart = async (userId: string, product: Product): Promise<CartTemplate | null> => {
+const updateUserCart = async (userId: string, product: ProductData): Promise<CartTemplate | null> => {
     const activeCart = await getActiveCart(userId);
     if (activeCart) {
         const productIndex = activeCart.items.findIndex((item) => item.product.id === product.productId)
@@ -62,16 +53,18 @@ const updateUserCart = async (userId: string, product: Product): Promise<CartTem
         const needToDeleteProduct = product.count === 0;
         if (productIsInCart && needToDeleteProduct) {
             activeCart.items = activeCart.items.filter((item) => item.product.id !== product.productId);
-            await DI.em.persistAndFlush(activeCart);
 
-            return fetchCartAndTotalPrice(activeCart);
+            return await activeCart.save()
+                .then(savedCart => fetchCartAndTotalPrice(savedCart))
+                .catch(err => null)
         }
 
         if (productIsInCart) {
             activeCart.items[productIndex].count = activeCart.items[productIndex].count + product.count;
-            await DI.em.persistAndFlush(activeCart);
 
-            return fetchCartAndTotalPrice(activeCart);
+            return await activeCart.save()
+                .then(savedCart => fetchCartAndTotalPrice(savedCart))
+                .catch(err => null)
         }
 
         const productFullInfo = await getProductById(product.productId)
@@ -83,9 +76,10 @@ const updateUserCart = async (userId: string, product: Product): Promise<CartTem
                     count: product.count
                 }
             ]
-            await DI.em.persistAndFlush(activeCart);
 
-            return fetchCartAndTotalPrice(activeCart);
+            return await activeCart.save()
+                .then(savedCart => fetchCartAndTotalPrice(savedCart))
+                .catch(err => null)
         }
 
         return null;
@@ -97,24 +91,13 @@ const emptyUserCart = async (userId: string): Promise<boolean> => {
     const activeCart = await getActiveCart(userId);
     if (activeCart) {
         activeCart.items = [];
-        await DI.em.persistAndFlush(activeCart);
+
+        await activeCart.clearCart();
+        await activeCart.save();
 
         return true;
     }
     return false;
 }
 
-const createOrder = async (userId: string): Promise<Order | null> => {
-    const user = await getUser(userId);
-    const activeCart = await getActiveCart(userId);
-    if (activeCart && user) {
-        const orderData = getOrderData(user, activeCart);
-        const newOrder = DI.em.create(Order, orderData);
-        await DI.em.persistAndFlush(newOrder);
-
-        return newOrder;
-    }
-    return null;
-}
-
-export { getUserCart, updateUserCart, emptyUserCart, createOrder }
+export { getUserCart, updateUserCart, emptyUserCart, getActiveCart }
