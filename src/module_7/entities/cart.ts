@@ -1,8 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 import { CartItemSchema } from './cartItem';
-import { CartItemEntity } from '../../module_6/dataBase/carts';
-import { CartModel, ICart, ICartMethods, ProductData } from './types';
+import { CartItemModel, CartModel, ICart, ICartMethods, ProductData } from './types';
 
 export const CartSchema = new Schema<ICart, CartModel, ICartMethods>({
     isDeleted: {
@@ -20,7 +19,7 @@ export const CartSchema = new Schema<ICart, CartModel, ICartMethods>({
 
 CartSchema.methods.addItem = function (product: ProductData, count: number) {
     const isExistingItem = this.items.find(
-        (item: CartItemEntity) => item.product.id === product.productId
+        (item: CartItemModel) => item.product.id === product.productId
     );
     if (isExistingItem) {
         isExistingItem.count += count;

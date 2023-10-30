@@ -55,7 +55,7 @@ interface UserModel extends Document {
 }
 
 interface ProductData {
-    productId: ObjectId
+    productId: string
     count: number
 }
 
