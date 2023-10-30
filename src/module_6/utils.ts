@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from '../module_7/entities/types';
+
 export const getTotalPrice = (items: CartItemModel[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
 
@@ -44,7 +45,7 @@ export const fetchCartItemsUserIdExcluded = ({ _id, items }: CartModelAndMethods
     items
 });
 
-export const    fetchCartAndTotalPrice = (cart: CartModelAndMethods): CartTemplate => ({
+export const fetchCartAndTotalPrice = (cart: CartModelAndMethods): CartTemplate => ({
     cart: fetchCartItemsUserIdExcluded(cart),
     total: getTotalPrice(cart.items)
 });

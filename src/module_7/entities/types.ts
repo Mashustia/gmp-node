@@ -48,8 +48,6 @@ type CartModelAndMethods = ICart & ICartMethods
 interface UserModel extends Document {
     _id: ObjectId
     email: string
-    cart?: ICart
-    orders: OrderModel[]
 }
 
 interface ProductData {

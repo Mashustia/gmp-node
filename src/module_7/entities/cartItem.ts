@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose';
+import { Schema } from 'mongoose';
+
 import { ProductSchema } from './product';
-const {Schema} = mongoose;
 
 export const CartItemSchema = new Schema({
     product: ProductSchema,
