@@ -1,11 +1,9 @@
-import { Schema } from 'mongoose';
-
 import { emptyUserCart, getUserCart, updateUserCart } from '../repositories/cart';
 import { ProductData } from '../../module_7/entities/types';
 
-const getCart = async (userId: Schema.Types.ObjectId) => getUserCart(userId);
-const updateCart = async (userId: Schema.Types.ObjectId, product: ProductData) => updateUserCart(userId, product);
-const clearCart = async (userId: Schema.Types.ObjectId) => emptyUserCart(userId);
+const getCart = async (userId: string) => getUserCart(userId);
+const updateCart = async (userId: string, product: ProductData) => updateUserCart(userId, product);
+const clearCart = async (userId: string) => emptyUserCart(userId);
 
 
 export { getCart, updateCart, clearCart }

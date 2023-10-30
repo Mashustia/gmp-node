@@ -1,5 +1,3 @@
-import { Schema } from 'mongoose';
-
 import {
     fetchCartAndTotalPrice,
 } from '../utils';
@@ -11,11 +9,11 @@ import {
 } from '../../module_7/entities/types';
 import Cart from '../../module_7/entities/cart';
 
-const getActiveCart = async (userId: Schema.Types.ObjectId): Promise<CartModelAndMethods | null> => {
+const getActiveCart = async (userId: string): Promise<CartModelAndMethods | null> => {
     return await Cart.findOne({ user: userId, isDeleted: false }).exec();
 }
 
-export const createCart = async (userId: Schema.Types.ObjectId): Promise<CartModelAndMethods | null> => {
+export const createCart = async (userId: string): Promise<CartModelAndMethods | null> => {
     const newCart = new Cart({
         user: userId,
         items: [],
@@ -26,7 +24,7 @@ export const createCart = async (userId: Schema.Types.ObjectId): Promise<CartMod
         .catch(err => null)
 };
 
-const getUserCart = async (userId: Schema.Types.ObjectId): Promise<CartTemplate | null> => {
+const getUserCart = async (userId: string): Promise<CartTemplate | null> => {
     const activeCart = await getActiveCart(userId);
 
     if (activeCart) {
@@ -47,7 +45,7 @@ const getUserCart = async (userId: Schema.Types.ObjectId): Promise<CartTemplate 
     return null;
 }
 
-const updateUserCart = async (userId: Schema.Types.ObjectId, product: ProductData): Promise<CartTemplate | null> => {
+const updateUserCart = async (userId: string, product: ProductData): Promise<CartTemplate | null> => {
     const activeCart = await getActiveCart(userId);
     if (activeCart) {
         const productIndex = activeCart.items.findIndex((item) => item.product.id === product.productId)
@@ -89,7 +87,7 @@ const updateUserCart = async (userId: Schema.Types.ObjectId, product: ProductDat
     return null;
 }
 
-const emptyUserCart = async (userId: Schema.Types.ObjectId): Promise<boolean> => {
+const emptyUserCart = async (userId: string): Promise<boolean> => {
     const activeCart = await getActiveCart(userId);
     if (activeCart) {
         activeCart.items = [];

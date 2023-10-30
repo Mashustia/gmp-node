@@ -1,7 +1,5 @@
-import { Schema } from 'mongoose';
-
 import { fetchUser } from '../services/users';
 
-const fetchUserController = (userId: Schema.Types.ObjectId) => fetchUser(userId)
+const fetchUserController = (userId: string) => fetchUser(userId)
 
 export { fetchUserController };

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 
 import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from '../module_7/entities/types';
 export const getTotalPrice = (items: CartItemModel[]): number => items
@@ -38,7 +37,7 @@ export const getSuccessMessage = <T>(
     error: null
 });
 
-export const getXUserHeader = (req: Request) => new mongoose.Types.ObjectId(req.header('x-user-id'));
+export const getXUserHeader = (req: Request) => req.header('x-user-id');
 
 export const fetchCartItemsUserIdExcluded = ({ _id, items }: CartModelAndMethods) => ({
     id: _id,
