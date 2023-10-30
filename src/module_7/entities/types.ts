@@ -1,10 +1,22 @@
-import { CartItemEntity } from '../../module_6/dataBase/carts';
+import { Schema, Document, Model } from 'mongoose';
 
-interface CartModel {
-    id: string
-    isDeleted: boolean
-    items: CartItemEntity[]
-    user: string
+interface ProductModel extends Document {
+    _id: Schema.Types.ObjectId;
+    title: string;
+    description: string;
+    price: number;
+}
+
+interface CartItemModel {
+    product: ProductModel
+    count: number
+}
+
+interface OrderModel extends Document {
+    _id: Schema.Types.ObjectId
+    user: Schema.Types.ObjectId,
+    cartId: Schema.Types.ObjectId
+    items: CartItemModel[]
     payment: {
         type: string
         address?: string
@@ -19,18 +31,50 @@ interface CartModel {
     total: number
 }
 
-interface OrderModel {
-    id: string
-    user: string
-    cartId: string
-    items: CartItemEntity[];
+interface ICart extends Document {
+    _id: Schema.Types.ObjectId
+    user: Schema.Types.ObjectId
+    isDeleted: boolean
+    items: CartItemModel[];
 }
 
-interface UserModel {
-    id: string
+interface ICartMethods {
+    addItem(product: ProductData, count: number): void;
+    clearCart(): void;
+}
+
+type CartModel = Model<ICart, {}, ICartMethods>;
+type CartModelAndMethods = ICart & ICartMethods
+
+interface UserModel extends Document {
+    _id: Schema.Types.ObjectId
     email: string
-    cart?: CartModel
+    cart?: ICart
     orders: OrderModel[]
 }
 
-export { UserModel, CartModel, OrderModel}
+interface ProductData {
+    productId: Schema.Types.ObjectId
+    count: number
+}
+
+interface CartTemplate {
+    cart: {
+        id: Schema.Types.ObjectId,
+        items: CartItemModel[]
+    }
+    total: number
+}
+
+export {
+    UserModel,
+    ICart,
+    ICartMethods,
+    CartModel,
+    CartModelAndMethods,
+    OrderModel,
+    ProductModel,
+    CartItemModel,
+    ProductData,
+    CartTemplate,
+}

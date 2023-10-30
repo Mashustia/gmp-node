@@ -1,15 +1,9 @@
 import { Schema, model } from 'mongoose';
 
 import { CartItemSchema } from './cartItem';
-import { v4 as uuid } from 'uuid';
+import { OrderModel } from './types';
 
-export const OrderSchema = new Schema({
-    _id: {
-        type: String,
-        default: () => uuid(),
-        alias: 'id',
-        required: true,
-    },
+export const OrderSchema = new Schema<OrderModel>({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -53,7 +47,9 @@ export const OrderSchema = new Schema({
     }
 })
 
-model('Order', OrderSchema)
+const Order = model<OrderModel>('Order', OrderSchema);
+
+export default Order;
 
 // @Entity()
 // class Order {

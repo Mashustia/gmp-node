@@ -1,5 +1,7 @@
-import { fetchUser } from '../controllers/users';
+import { Schema } from 'mongoose';
 
-const fetchUserController = async (userId: string) => await fetchUser(userId);
+import { getUser } from '../repositories/users';
 
-export { fetchUserController }
+const fetchUser = async (userId: Schema.Types.ObjectId) => await getUser(userId);
+
+export { fetchUser }

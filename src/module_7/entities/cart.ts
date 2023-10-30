@@ -1,29 +1,24 @@
 import { Schema, model } from 'mongoose';
-import { v4 as uuid } from 'uuid';
 
 import { CartItemSchema } from './cartItem';
-import { Product } from '../../module_6/repositories/cart';
 import { CartItemEntity } from '../../module_6/dataBase/carts';
+import { CartModel, ICart, ICartMethods, ProductData } from './types';
 
-export const CartSchema = new Schema({
-    _id: {
-        type: String,
-        default: () => uuid(),
-        alias: 'id',
-        required: true,
-    },
+export const CartSchema = new Schema<ICart, CartModel, ICartMethods>({
     isDeleted: {
         type: Boolean,
         required: true,
+        default: false,
     },
     items: [CartItemSchema],
-    user: { // maybe change to full user odk
-        type: String,
-        required: true,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
 })
 
-CartSchema.methods.addItem = function (product: Product, count: number) {
+CartSchema.methods.addItem = function (product: ProductData, count: number) {
     const isExistingItem = this.items.find(
         (item: CartItemEntity) => item.product.id === product.productId
     );
@@ -34,7 +29,13 @@ CartSchema.methods.addItem = function (product: Product, count: number) {
     }
 }
 
-model('Cart', CartSchema)
+CartSchema.methods.clearCart = function () {
+    this.items = [];
+}
+
+const Cart = model<ICart, CartModel>('Cart', CartSchema)
+
+export default Cart;
 
 // @Entity()
 // class Cart {

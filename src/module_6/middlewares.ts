@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { getErrorMessage, getXUserHeader } from './utils';
 import { StatusCode } from '../module_5/const';
 import { errorMessage } from './consts';
-import { fetchUserController } from './services/users';
+import { fetchUserController } from './controllers/users';
 
 export const logger = (req: Request, res: Response, next: NextFunction) => {
     console.log(`New request: ${req.method}, ${req.url}`);

@@ -1,13 +1,8 @@
-import { v4 as uuid } from 'uuid';
 import { Schema, model } from 'mongoose';
 
-export const ProductSchema = new Schema({
-    _id: {
-        type: String,
-        default: () => uuid(),
-        alias: 'id',
-        required: true,
-    },
+import { ProductModel } from './types';
+
+export const ProductSchema = new Schema<ProductModel>({
     title: {
         type: String,
         required: true,
@@ -22,7 +17,9 @@ export const ProductSchema = new Schema({
     },
 });
 
-model('Product', ProductSchema);
+const Product = model<ProductModel>('Product', ProductSchema);
+
+export default Product;
 
 // @Entity()
 // class Product {

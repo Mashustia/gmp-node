@@ -1,12 +1,10 @@
-import { DI } from '../../../app';
+import { Schema } from 'mongoose';
+
+import { UserModel } from '../../module_7/entities/types';
 import User from '../../module_7/entities/user';
 
-const getUser = async (userId: string): Promise<User | null> => {
-    const user = await DI.user.findOne(userId);
-    if (user) {
-        return user
-    }
-    return null;
+const getUser = async (userId: Schema.Types.ObjectId): Promise<UserModel | null> => {
+    return await User.findOne({ _id: userId }).exec();
 }
 
 export { getUser }

@@ -3,7 +3,7 @@ services:
   mongo:
     ports:
       - '27017:27017'
-    container_name: node-gmp-db
+    container_name: node-gmp-db-mongo
     restart: always
     logging:
       options:

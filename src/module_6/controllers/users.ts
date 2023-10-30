@@ -1,5 +1,7 @@
-import { getUser } from '../repositories/users';
+import { Schema } from 'mongoose';
 
-const fetchUser = (userId: string) => getUser(userId)
+import { fetchUser } from '../services/users';
 
-export { fetchUser };
+const fetchUserController = (userId: Schema.Types.ObjectId) => fetchUser(userId)
+
+export { fetchUserController };

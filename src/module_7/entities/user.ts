@@ -1,16 +1,10 @@
 import { Schema, model } from 'mongoose';
-import { v4 as uuid } from 'uuid';
 
 import { CartSchema } from './cart';
 import { OrderSchema } from './order';
+import { UserModel } from './types';
 
-const UserSchema = new Schema({
-    _id: {
-        type: String,
-        default: () => uuid(),
-        alias: 'id',
-        required: true,
-    },
+const UserSchema = new Schema<UserModel>({
     email: {
         type: String,
         required: true,
@@ -25,7 +19,9 @@ const UserSchema = new Schema({
     },
 });
 
-model('User', UserSchema);
+const User = model<UserModel>('User', UserSchema);
+
+export default User;
 
 // @Entity()
 // class User {

@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
-import {
-    CartItemEntity,
-} from './dataBase/carts';
-import Cart from '../module_7/entities/cart';
-import { UserModel } from '../module_7/entities/types';
-export const getTotalPrice = (items: CartItemEntity[]): number => items
+import mongoose from 'mongoose';
+
+import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from '../module_7/entities/types';
+export const getTotalPrice = (items: CartItemModel[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
 
-export const getOrderData = (user: UserModel, { id, items }: Cart) => ({
+export const getOrderData = (user: UserModel, { _id, items }: CartModelAndMethods) => ({
     user,
-    cartId: id,
+    cartId: _id,
     items: items,
     payment: {
         type: 'paypal',
@@ -40,11 +38,14 @@ export const getSuccessMessage = <T>(
     error: null
 });
 
-export const getXUserHeader = (req: Request) => req.header('x-user-id');
+export const getXUserHeader = (req: Request) => new mongoose.Types.ObjectId(req.header('x-user-id'));
 
-export const fetchCartItemsUserIdExcluded = ({ id, items}: Cart) => ({ id, items });
+export const fetchCartItemsUserIdExcluded = ({ _id, items }: CartModelAndMethods) => ({
+    id: _id,
+    items
+});
 
-export const fetchCartAndTotalPrice = (cart: Cart) => ({
+export const    fetchCartAndTotalPrice = (cart: CartModelAndMethods): CartTemplate => ({
     cart: fetchCartItemsUserIdExcluded(cart),
     total: getTotalPrice(cart.items)
 });
