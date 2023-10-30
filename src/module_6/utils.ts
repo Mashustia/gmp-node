@@ -5,7 +5,7 @@ export const getTotalPrice = (items: CartItemModel[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
 
 export const getOrderData = (user: UserModel, { _id, items }: CartModelAndMethods) => ({
-    user,
+    userId: user.id,
     cartId: _id,
     items: items,
     payment: {
@@ -15,7 +15,7 @@ export const getOrderData = (user: UserModel, { _id, items }: CartModelAndMethod
     },
     delivery: {
         type: 'post',
-        address: undefined
+        address: 'some address'
     },
     comments: '',
     status: 'created',

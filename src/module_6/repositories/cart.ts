@@ -93,6 +93,7 @@ const emptyUserCart = async (userId: string): Promise<boolean> => {
         activeCart.items = [];
 
         await activeCart.clearCart();
+        await activeCart.save();
 
         return true;
     }

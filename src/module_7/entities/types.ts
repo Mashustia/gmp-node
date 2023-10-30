@@ -14,7 +14,7 @@ interface CartItemModel {
 
 interface OrderModel extends Document {
     _id: ObjectId
-    user: ObjectId
+    userId: ObjectId
     cartId: ObjectId
     items: CartItemModel[]
     payment: {
@@ -39,8 +39,6 @@ interface ICart extends Document {
 }
 
 interface ICartMethods {
-    addItem(product: ProductData, count: number): void
-
     clearCart(): void
 }
 

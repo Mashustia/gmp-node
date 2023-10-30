@@ -12,8 +12,12 @@ const createOrder = async (userId: string): Promise<OrderModel | null> => {
         const newOrder = new Order(orderData)
 
         return await newOrder.save()
-            .then(savedOrder => savedOrder)
-            .catch(err => null)
+            .then(savedOrder => {
+                return savedOrder;
+            })
+            .catch(err => {
+                return null;
+            })
     }
     return null;
 }
