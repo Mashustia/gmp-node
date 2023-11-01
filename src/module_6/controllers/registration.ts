@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 import { getErrorMessage, getSuccessMessage } from '../utils';
@@ -9,12 +8,10 @@ import { createUser, findUserByEmail } from './users';
 import { Role } from '../../module_7/entities/types';
 
 const registrationController = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-
     try {
-        const { first_name, last_name, admin, email, password } = req.body;
+        const { admin, email, password } = req.body;
 
-        if (!(email && password && first_name && last_name)) {
+        if (!(email && password && admin)) {
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.BAD_REQUEST,
@@ -37,7 +34,7 @@ const registrationController = async (req: Request, res: Response) => {
         const userId = await createUser({
             email: email.toLowerCase(),
             password: encryptedPassword,
-            role: admin === 'true' ? Role.admin : Role.user
+            role: admin === Role.admin ? Role.admin : Role.user
         });
 
         if (userId) {

@@ -1,18 +1,17 @@
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 import { getErrorMessage, getSuccessMessage } from '../utils';
 import { StatusCode } from '../../module_5/const';
-import { errorMessage } from '../consts';
+import { errorMessage, TOKEN_KEY } from '../consts';
 import { findUserByEmail } from './users';
 
 const loginController = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-
     try {
-        if (!(email && password)) {
-            res.status(400).send('All input is required');
+        const { email, password } = req.body;
 
+        if (!(email && password)) {
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.BAD_REQUEST,
@@ -21,10 +20,20 @@ const loginController = async (req: Request, res: Response) => {
         }
 
         const user = await findUserByEmail(email);
-        if (user) {
+        if (!user) {
+            return getErrorMessage({
+                res,
+                statusCode: StatusCode.NOT_FOUND,
+                message: errorMessage.user_not_found
+            })
+        }
+
+        const passwordMatches = await bcrypt.compare(password, user.password);
+
+        if (passwordMatches) {
             const token = jwt.sign(
-                { user_id: user._id, email, role: user.role },
-                process.env.TOKEN_KEY!,
+                { id: user._id, email, role: user.role },
+                TOKEN_KEY,
                 {
                     expiresIn: '2h',
                 }
@@ -42,7 +51,7 @@ const loginController = async (req: Request, res: Response) => {
         return getErrorMessage({
             res,
             statusCode: StatusCode.BAD_REQUEST,
-            message: errorMessage.invalid_credentials
+            message: errorMessage.invalid_password
         })
     } catch (err) {
         return getErrorMessage({

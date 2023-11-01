@@ -3,8 +3,8 @@ import * as jwt from "jsonwebtoken";
 
 import { getErrorMessage } from './utils';
 import { StatusCode } from '../module_5/const';
-import { errorMessage } from './consts';
-import { CurrentUser } from '../module_7/entities/types';
+import { errorMessage, TOKEN_KEY } from './consts';
+import { CurrentUser, Role } from '../module_7/entities/types';
 
 export const logger = (req: Request, res: Response, next: NextFunction) => {
     console.log(`New request: ${req.method}, ${req.url}`);
@@ -44,13 +44,31 @@ export const verifyToken = async (
     }
 
     try {
-        const user = jwt.verify(token, process.env.TOKEN_KEY!) as CurrentUser;
+        const user = jwt.verify(token, TOKEN_KEY!) as CurrentUser;
         req.user = user;
     } catch (error) {
         return getErrorMessage({
             res,
             statusCode: StatusCode.UNAUTHORIZED,
             message: errorMessage.invalid_token
+        })
+    }
+
+    return next();
+}
+
+export const isAdminCheck = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const isAdmin = req.user.role === Role.admin;
+
+    if (!isAdmin) {
+        return getErrorMessage({
+            res,
+            statusCode: StatusCode.FORBIDDEN,
+            message: errorMessage.not_admin
         })
     }
 

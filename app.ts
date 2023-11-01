@@ -18,12 +18,11 @@ declare global {
 
 const app = express();
 const startApp = async () => {
-
     app.use(express.json())
     app.use(bodyParser.json())
 
-    app.use(Path.auth, authRouter);
     app.use(Path.registration, registrationRouter);
+    app.use(Path.auth, authRouter);
     app.use(Route.api, verifyToken);
 
     app.use(Path.cart, cartRouter);

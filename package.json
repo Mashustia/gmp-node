@@ -11,10 +11,7 @@
     "test": "jest",
     "module_5": "nodemon --esm src/module_5/server.ts",
     "module_6": "nodemon app.ts",
-    "test:coverage": "jest --coverage",
-    "orm:migrate:create": "mikro-orm migration:create",
-    "orm:migrate:up": "mikro-orm migration:up",
-    "orm:seeder:run": "mikro-orm seeder:run"
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
