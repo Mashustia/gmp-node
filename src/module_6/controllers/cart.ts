@@ -1,37 +1,32 @@
 import { Request, Response } from 'express';
-import { getErrorMessage, getSuccessMessage, getXUserHeader } from '../utils';
+import { getErrorMessage, getSuccessMessage } from '../utils';
 import { StatusCode } from '../../module_5/const';
-import { clearCart, getCart, updateCart } from '../services/cart';
+import { deleteCart, getCart, updateCart } from '../services/cart';
 import { errorMessage } from '../consts';
 import { checkoutCart } from '../services/order';
+import { Role } from '../../module_7/entities/types';
 
 const getCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
-    if (userId) {
-        const cart = await getCart(userId);
+    const cart = await getCart(req.user.id);
 
-        return getSuccessMessage({
-            res,
-            statusCode: StatusCode.OK,
-            data: cart
-        });
-    }
+    return getSuccessMessage({
+        res,
+        statusCode: StatusCode.OK,
+        data: cart
+    });
 }
 
 const updateCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
     const cart = req.body;
 
-    if (userId) {
-        const updatedCart = await updateCart(userId, cart);
+    const updatedCart = await updateCart(req.user.id, cart);
 
-        if (updatedCart !== null) {
-            return getSuccessMessage({
-                res,
-                statusCode: StatusCode.OK,
-                data: updatedCart
-            });
-        }
+    if (updatedCart !== null) {
+        return getSuccessMessage({
+            res,
+            statusCode: StatusCode.OK,
+            data: updatedCart
+        });
     }
 
     return getErrorMessage({
@@ -41,13 +36,20 @@ const updateCartController = async (req: Request, res: Response) => {
     })
 }
 
-const clearCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
+const deleteCartController = async (req: Request, res: Response) => {
+    try {
+        const isAdmin = req.user.role === Role.admin;
 
-    if (userId) {
-        const isCartCleared = await clearCart(userId)
+        if (!isAdmin) {
+            return getErrorMessage({
+                res,
+                statusCode: StatusCode.FORBIDDEN,
+                message: errorMessage.not_admin
+            })
+        }
 
-        if (isCartCleared) {
+        const isCartDeleted = await deleteCart(req.user.id)
+        if (isCartDeleted) {
             return getSuccessMessage({
                 res,
                 statusCode: StatusCode.OK,
@@ -62,31 +64,33 @@ const clearCartController = async (req: Request, res: Response) => {
             statusCode: StatusCode.NOT_FOUND,
             message: errorMessage.cart_not_found
         })
-    }
-}
-
-const checkoutCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
-
-    if (userId) {
-        const order = await checkoutCart(userId);
-
-        if (order !== null) {
-            return getSuccessMessage({
-                res,
-                statusCode: StatusCode.OK,
-                data: {
-                    order
-                }
-            });
-        }
-
+    } catch (err) {
         return getErrorMessage({
             res,
-            statusCode: StatusCode.NOT_FOUND,
-            message: errorMessage.cart_not_found
+            statusCode: StatusCode.INTERNAL_SERVER_ERROR,
+            message: errorMessage.internal_server_error
         })
     }
 }
 
-export { getCartController, updateCartController, clearCartController, checkoutCartController }
+const checkoutCartController = async (req: Request, res: Response) => {
+    const order = await checkoutCart(req.user.id);
+
+    if (order !== null) {
+        return getSuccessMessage({
+            res,
+            statusCode: StatusCode.OK,
+            data: {
+                order
+            }
+        });
+    }
+
+    return getErrorMessage({
+        res,
+        statusCode: StatusCode.NOT_FOUND,
+        message: errorMessage.cart_not_found
+    })
+}
+
+export { getCartController, updateCartController, deleteCartController, checkoutCartController }

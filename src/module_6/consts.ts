@@ -14,7 +14,8 @@ export const Route = {
 export const Path = {
     cart: `${Route.api}${Route.profile}${Route.cart}`,
     products: `${Route.api}${Route.products}`,
-    auth: `${Route.api}${Route.auth}`,
+    auth: `${Route.api}${Route.login}`,
+    registration: `${Route.api}${Route.register}`,
 }
 
 export const errorMessage = {
@@ -28,4 +29,13 @@ export const errorMessage = {
     internal_server_error: 'Internal Server error',
     no_product_found: 'No product with such id',
     products_not_valid: 'Products are not valid',
+    all_input_is_required: 'All input is required',
+    invalid_credentials: 'Invalid Credentials',
+    invalid_password: 'Invalid password',
+    token_is_required: 'Token is required',
+    invalid_token: 'Invalid Token',
+    user_exist: 'User Already Exist. Please Login',
+    not_admin: "Only users with administrator privileges can delete the shopping cart"
 }
+
+export const TOKEN_KEY = 'somegibberish345345'

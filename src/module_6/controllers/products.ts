@@ -1,24 +1,20 @@
 import { Request, Response } from 'express';
-import { getErrorMessage, getSuccessMessage, getXUserHeader } from '../utils';
+import { getErrorMessage, getSuccessMessage } from '../utils';
 import { getProduct, getProducts } from '../services/products';
 import { StatusCode } from '../../module_5/const';
 import { errorMessage } from '../consts';
 
 const getProductsController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
-    if (userId) {
-        const products = await getProducts();
+    const products = await getProducts();
 
-        return getSuccessMessage({
-            res,
-            statusCode: StatusCode.OK,
-            data: products
-        });
-    }
+    return getSuccessMessage({
+        res,
+        statusCode: StatusCode.OK,
+        data: products
+    });
 }
 
 const getProductController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
     const productId = req.params.productId;
 
     if (!productId) {
@@ -29,23 +25,20 @@ const getProductController = async (req: Request, res: Response) => {
         })
     }
 
-    if (userId && productId) {
-        const product = await getProduct(productId);
-
-        if (product !== null) {
-            return getSuccessMessage({
-                res,
-                statusCode: StatusCode.OK,
-                data: product
-            });
-        }
-
-        return getErrorMessage({
+    const product = await getProduct(productId);
+    if (product !== null) {
+        return getSuccessMessage({
             res,
-            statusCode: StatusCode.NOT_FOUND,
-            message: errorMessage.no_product_found
-        })
+            statusCode: StatusCode.OK,
+            data: product
+        });
     }
+
+    return getErrorMessage({
+        res,
+        statusCode: StatusCode.NOT_FOUND,
+        message: errorMessage.no_product_found
+    })
 }
 
 export { getProductsController, getProductController }

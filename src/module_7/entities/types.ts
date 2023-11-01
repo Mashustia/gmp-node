@@ -45,9 +45,19 @@ interface ICartMethods {
 type CartModel = Model<ICart, {}, ICartMethods>
 type CartModelAndMethods = ICart & ICartMethods
 
+export const Role = {
+    admin: 'admin',
+    user: 'user',
+}
+
+type RoleKeys = keyof typeof Role;
+type RoleValues = typeof Role[RoleKeys];
+
 interface UserModel extends Document {
     _id: ObjectId
     email: string
+    password: string
+    role: RoleValues
 }
 
 interface ProductData {
@@ -63,6 +73,14 @@ interface CartTemplate {
     total: number
 }
 
+interface CurrentUser {
+    id: string,
+    email: string,
+    role: string
+}
+
+type NewUser = Pick<UserModel, 'email' | 'password' | 'role'>
+
 export {
     UserModel,
     ICart,
@@ -74,4 +92,6 @@ export {
     CartItemModel,
     ProductData,
     CartTemplate,
+    CurrentUser,
+    NewUser,
 }

@@ -14,14 +14,12 @@ const getActiveCart = async (userId: string): Promise<CartModelAndMethods | null
 }
 
 export const createCart = async (userId: string): Promise<CartModelAndMethods | null> => {
-    const newCart = new Cart({
+    const newCart = await Cart.create({
         user: userId,
         items: [],
     });
 
-    return await newCart.save()
-        .then(savedCart => savedCart)
-        .catch(err => null)
+    return newCart || null;
 };
 
 const getUserCart = async (userId: string): Promise<CartTemplate | null> => {
@@ -36,8 +34,8 @@ const getUserCart = async (userId: string): Promise<CartTemplate | null> => {
     if (newCart) {
         return {
             cart: {
-                ...newCart,
-                id: newCart._id
+                id: newCart._id,
+                items: newCart.items,
             },
             total: 0
         }
@@ -87,12 +85,10 @@ const updateUserCart = async (userId: string, product: ProductData): Promise<Car
     return null;
 }
 
-const emptyUserCart = async (userId: string): Promise<boolean> => {
+const deleteUserCart = async (userId: string): Promise<boolean> => {
     const activeCart = await getActiveCart(userId);
     if (activeCart) {
-        activeCart.items = [];
-
-        await activeCart.clearCart();
+        activeCart.isDeleted = true;
         await activeCart.save();
 
         return true;
@@ -100,4 +96,4 @@ const emptyUserCart = async (userId: string): Promise<boolean> => {
     return false;
 }
 
-export { getUserCart, updateUserCart, emptyUserCart, getActiveCart }
+export { getUserCart, updateUserCart, deleteUserCart, getActiveCart }
