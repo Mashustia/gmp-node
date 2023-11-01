@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { getErrorMessage, getXUserHeader } from './utils';
+import * as jwt from "jsonwebtoken";
+
+import { getErrorMessage } from './utils';
 import { StatusCode } from '../module_5/const';
 import { errorMessage } from './consts';
-import { fetchUserController } from './controllers/users';
+import { CurrentUser } from '../module_7/entities/types';
 
 export const logger = (req: Request, res: Response, next: NextFunction) => {
     console.log(`New request: ${req.method}, ${req.url}`);
@@ -16,39 +18,41 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
     next();
 };
 
-export const auth = async (
+export const verifyToken = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    try {
-        const userId = getXUserHeader(req);
+    const authHeader = req.headers.authorization;
 
-        if (!userId) {
-            return getErrorMessage({
-                res,
-                statusCode: StatusCode.FORBIDDEN,
-                message: errorMessage.authorization_header_is_missing
-            })
-        }
+    if (!authHeader) {
+        return getErrorMessage({
+            res,
+            statusCode: StatusCode.UNAUTHORIZED,
+            message: errorMessage.token_is_required
+        })
+    }
 
-        const user = await fetchUserController(userId);
+    const [tokenType, token] = authHeader.split(' ');
 
-
-        if (user === null) {
-            return getErrorMessage({
-                res,
-                statusCode: StatusCode.UNAUTHORIZED,
-                message: errorMessage.no_user_matching_authorization_header_is_found
-            })
-        }
-
-        next();
-    } catch (error) {
+    if (tokenType !== 'Bearer') {
         return getErrorMessage({
             res,
             statusCode: StatusCode.FORBIDDEN,
-            message: errorMessage.dont_have_permission
+            message: errorMessage.invalid_token
         })
     }
+
+    try {
+        const user = jwt.verify(token, process.env.TOKEN_KEY!) as CurrentUser;
+        req.user = user;
+    } catch (error) {
+        return getErrorMessage({
+            res,
+            statusCode: StatusCode.UNAUTHORIZED,
+            message: errorMessage.invalid_token
+        })
+    }
+
+    return next();
 }

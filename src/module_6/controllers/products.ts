@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { getErrorMessage, getSuccessMessage, getXUserHeader } from '../utils';
+import { getErrorMessage, getSuccessMessage } from '../utils';
 import { getProduct, getProducts } from '../services/products';
 import { StatusCode } from '../../module_5/const';
 import { errorMessage } from '../consts';
 
 const getProductsController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
+    const userId = req.user.id;
     if (userId) {
         const products = await getProducts();
 
@@ -18,7 +18,7 @@ const getProductsController = async (req: Request, res: Response) => {
 }
 
 const getProductController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
+    const userId = req.user.id;
     const productId = req.params.productId;
 
     if (!productId) {

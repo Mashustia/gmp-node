@@ -1,5 +1,7 @@
-import { getUser } from '../repositories/users';
+import { createUser, getUserByEmail } from '../repositories/users';
+import { NewUser } from '../../module_7/entities/types';
 
-const fetchUser = async (userId: string) => await getUser(userId);
+const fetchUserByEmail = async (email: string) => await getUserByEmail(email);
+const addUser = async (newUserData: NewUser) => await createUser(newUserData);
 
-export { fetchUser }
+export { fetchUserByEmail, addUser }

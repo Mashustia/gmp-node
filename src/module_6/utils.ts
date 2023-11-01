@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from '../module_7/entities/types';
 
@@ -37,8 +37,6 @@ export const getSuccessMessage = <T>(
     data,
     error: null
 });
-
-export const getXUserHeader = (req: Request) => req.header('x-user-id');
 
 export const fetchCartItemsUserIdExcluded = ({ _id, items }: CartModelAndMethods) => ({
     id: _id,

@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { getErrorMessage, getSuccessMessage, getXUserHeader } from '../utils';
+import { getErrorMessage, getSuccessMessage } from '../utils';
 import { StatusCode } from '../../module_5/const';
 import { clearCart, getCart, updateCart } from '../services/cart';
 import { errorMessage } from '../consts';
 import { checkoutCart } from '../services/order';
 
 const getCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
+    const userId = req.user.id;
     if (userId) {
         const cart = await getCart(userId);
 
@@ -19,7 +19,7 @@ const getCartController = async (req: Request, res: Response) => {
 }
 
 const updateCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
+    const userId = req.user.id;
     const cart = req.body;
 
     if (userId) {
@@ -42,7 +42,7 @@ const updateCartController = async (req: Request, res: Response) => {
 }
 
 const clearCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
+    const userId = req.user.id;
 
     if (userId) {
         const isCartCleared = await clearCart(userId)
@@ -66,7 +66,7 @@ const clearCartController = async (req: Request, res: Response) => {
 }
 
 const checkoutCartController = async (req: Request, res: Response) => {
-    const userId = getXUserHeader(req);
+    const userId = req.user.id;
 
     if (userId) {
         const order = await checkoutCart(userId);
