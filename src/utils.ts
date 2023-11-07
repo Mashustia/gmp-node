@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from '../module_7/entities/types';
+import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from './entities/types';
 
 export const getTotalPrice = (items: CartItemModel[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)

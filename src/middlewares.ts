@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 
 import { getErrorMessage } from './utils';
 import { errorMessage, StatusCode, TOKEN_KEY } from './consts';
-import { CurrentUser, Role } from '../module_7/entities/types';
+import { CurrentUser, Role } from './entities/types';
 
 export const logger = (req: Request, res: Response, next: NextFunction) => {
     console.log(`New request: ${req.method}, ${req.url}`);

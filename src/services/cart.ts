@@ -1,5 +1,5 @@
 import { deleteUserCart, getUserCart, updateUserCart } from '../repositories/cart';
-import { ProductData } from '../../module_7/entities/types';
+import { ProductData } from '../entities/types';
 
 const getCart = async (userId: string) => getUserCart(userId);
 const updateCart = async (userId: string, product: ProductData) => updateUserCart(userId, product);

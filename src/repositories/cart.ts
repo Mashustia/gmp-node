@@ -6,8 +6,8 @@ import {
     CartTemplate,
     ProductData,
     CartModelAndMethods
-} from '../../module_7/entities/types';
-import Cart from '../../module_7/entities/cart';
+} from '../entities/types';
+import Cart from '../entities/cart';
 
 const getActiveCart = async (userId: string): Promise<CartModelAndMethods | null> => {
     return await Cart.findOne({ user: userId, isDeleted: false }).exec();

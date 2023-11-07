@@ -2,10 +2,10 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 
-import { Path, PORT, Route } from './src/module_6/consts';
-import { verifyToken, errorHandler, logger } from './src/module_6/middlewares';
-import { authRouter, cartRouter, productsRouter, registrationRouter } from './src/module_6/router';
-import { CurrentUser } from './src/module_7/entities/types';
+import { Path, PORT, Route } from './src/consts';
+import { verifyToken, errorHandler, logger } from './src/middlewares';
+import { authRouter, cartRouter, productsRouter, registrationRouter } from './src/router';
+import { CurrentUser } from './src/entities/types';
 
 declare global {
     namespace Express {

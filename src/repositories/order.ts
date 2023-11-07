@@ -1,8 +1,8 @@
 import { getUser } from './users';
 import { getOrderData } from '../utils';
 import { getActiveCart } from './cart';
-import Order from '../../module_7/entities/order';
-import { OrderModel } from '../../module_7/entities/types';
+import Order from '../entities/order';
+import { OrderModel } from '../entities/types';
 
 const createOrder = async (userId: string): Promise<OrderModel | null> => {
     const user = await getUser(userId);

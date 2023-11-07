@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { getErrorMessage, getSuccessMessage } from '../utils';
 import { errorMessage, StatusCode } from '../consts';
 import { createUser, findUserByEmail } from './users';
-import { Role } from '../../module_7/entities/types';
+import { Role } from '../entities/types';
 
 const registrationController = async (req: Request, res: Response) => {
     try {

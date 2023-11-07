@@ -1,5 +1,5 @@
-import { ProductModel } from '../../module_7/entities/types';
-import Product from '../../module_7/entities/product';
+import { ProductModel } from '../entities/types';
+import Product from '../entities/product';
 
 const getProductsList = async (): Promise<ProductModel[] | null> => {
     return await Product.find({}).exec();

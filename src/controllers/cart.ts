@@ -3,7 +3,7 @@ import { getErrorMessage, getSuccessMessage } from '../utils';
 import { deleteCart, getCart, updateCart } from '../services/cart';
 import { errorMessage, StatusCode } from '../consts';
 import { checkoutCart } from '../services/order';
-import { Role } from '../../module_7/entities/types';
+import { Role } from '../entities/types';
 
 const getCartController = async (req: Request, res: Response) => {
     const cart = await getCart(req.user.id);
