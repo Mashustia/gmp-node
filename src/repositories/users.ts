@@ -16,7 +16,10 @@ const createUser = async (user: NewUser): Promise<string | null> => {
         .then(savedUser => {
             return savedUser._id.toString();
         })
-        .catch(err => null)
+        .catch(error => {
+            console.log(error);
+            return null;
+        })
 }
 
 export { getUser, getUserByEmail, createUser }

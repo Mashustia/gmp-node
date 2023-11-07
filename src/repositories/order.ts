@@ -15,7 +15,8 @@ const createOrder = async (userId: string): Promise<OrderModel | null> => {
             .then(savedOrder => {
                 return savedOrder;
             })
-            .catch(err => {
+            .catch(error => {
+                console.log(error);
                 return null;
             })
     }

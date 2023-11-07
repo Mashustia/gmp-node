@@ -1,5 +1,7 @@
 import { Document, Model, ObjectId } from 'mongoose';
 
+export type EmptyObject = Record<string, never>
+
 interface ProductModel extends Document {
     _id: ObjectId
     title: string
@@ -42,7 +44,7 @@ interface ICartMethods {
     clearCart(): void
 }
 
-type CartModel = Model<ICart, {}, ICartMethods>
+type CartModel = Model<ICart, EmptyObject, ICartMethods>
 type CartModelAndMethods = ICart & ICartMethods
 
 export const Role = {

@@ -364,7 +364,7 @@ describe('Nager.Date API - V3 E2E tests', () => {
             const { status, body } = await request(PUBLIC_HOLIDAYS_API_URL).get(api_url);
 
             expect(status).toEqual(StatusCode.OK);
-            body.forEach((holiday: any) => {
+            body.forEach((holiday: unknown) => {
                 expect(holiday).toEqual(
                     expect.objectContaining({
                         date: expect.any(String),
@@ -385,7 +385,7 @@ describe('Nager.Date API - V3 E2E tests', () => {
             const { status, body } = await request(PUBLIC_HOLIDAYS_API_URL).get(api_url);
 
             expect(status).toEqual(StatusCode.OK);
-            body.forEach((holiday: any) => {
+            body.forEach((holiday: unknown) => {
                 expect(holiday).toEqual(
                     expect.objectContaining({
                         date: expect.any(String),

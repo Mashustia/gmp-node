@@ -54,7 +54,10 @@ const updateUserCart = async (userId: string, product: ProductData): Promise<Car
 
             return await activeCart.save()
                 .then(savedCart => fetchCartAndTotalPrice(savedCart))
-                .catch(err => null)
+                .catch(error => {
+                    console.log(error);
+                    return null;
+                })
         }
 
         if (productIsInCart) {
@@ -62,7 +65,10 @@ const updateUserCart = async (userId: string, product: ProductData): Promise<Car
 
             return await activeCart.save()
                 .then(savedCart => fetchCartAndTotalPrice(savedCart))
-                .catch(err => null)
+                .catch(error => {
+                    console.log(error);
+                    return null;
+                })
         }
 
         const productFullInfo = await getProductById(product.productId)
@@ -77,7 +83,10 @@ const updateUserCart = async (userId: string, product: ProductData): Promise<Car
 
             return await activeCart.save()
                 .then(savedCart => fetchCartAndTotalPrice(savedCart))
-                .catch(err => null)
+                .catch(error => {
+                    console.log(error);
+                    return null;
+                })
         }
 
         return null;
