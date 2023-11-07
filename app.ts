@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 
 import { Path, PORT, Route, URI } from './src/consts';
-import { verifyToken, errorHandler, logger } from './src/middlewares';
+import { verifyToken, errorHandler, incomingRequestLogger } from './src/middlewares';
 import { authRouter, cartRouter, productsRouter, registrationRouter } from './src/router';
 import { CurrentUser } from './src/entities/types';
 
@@ -19,6 +19,7 @@ const app = express();
 const startApp = async () => {
     app.use(express.json())
     app.use(bodyParser.json())
+    app.use(incomingRequestLogger);
 
     app.use(Path.registration, registrationRouter);
     app.use(Path.auth, authRouter);
@@ -28,7 +29,6 @@ const startApp = async () => {
     app.use(Path.products, productsRouter);
 
     app.use(errorHandler);
-    app.use(logger);
 
     await mongoose.connect(URI).then(() => console.log('connected to mongodb!'))
 

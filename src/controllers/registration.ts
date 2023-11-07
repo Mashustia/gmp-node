@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 
-import { getErrorMessage, getSuccessMessage } from '../utils';
+import { getErrorMessage, getSuccessMessage, loggerCall } from '../utils';
 import { errorMessage, StatusCode } from '../consts';
 import { createUser, findUserByEmail } from './users';
 import { Role } from '../entities/types';
@@ -11,6 +11,7 @@ const registrationController = async (req: Request, res: Response) => {
         const { admin, email, password } = req.body;
 
         if (!(email && password && admin)) {
+            loggerCall('registrationController', errorMessage.all_input_is_required);
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.BAD_REQUEST,
@@ -21,6 +22,7 @@ const registrationController = async (req: Request, res: Response) => {
         const registeredUser = await findUserByEmail(email);
 
         if (registeredUser) {
+            loggerCall('registrationController', errorMessage.user_exist);
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.CONFLICT,
@@ -46,6 +48,7 @@ const registrationController = async (req: Request, res: Response) => {
             });
         }
     } catch (err) {
+        loggerCall('registrationController', errorMessage.internal_server_error);
         return getErrorMessage({
             res,
             statusCode: StatusCode.INTERNAL_SERVER_ERROR,

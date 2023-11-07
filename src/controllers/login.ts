@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
-import { getErrorMessage, getSuccessMessage } from '../utils';
+import { getErrorMessage, getSuccessMessage, loggerCall } from '../utils';
 import { errorMessage, StatusCode, TOKEN_KEY } from '../consts';
 import { findUserByEmail } from './users';
 
@@ -11,6 +11,7 @@ const loginController = async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
         if (!(email && password)) {
+            loggerCall('loginController', errorMessage.all_input_is_required);
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.BAD_REQUEST,
@@ -20,6 +21,7 @@ const loginController = async (req: Request, res: Response) => {
 
         const user = await findUserByEmail(email);
         if (!user) {
+            loggerCall('loginController', errorMessage.user_not_found);
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.NOT_FOUND,
@@ -47,12 +49,14 @@ const loginController = async (req: Request, res: Response) => {
             });
         }
 
+        loggerCall('loginController', errorMessage.invalid_password);
         return getErrorMessage({
             res,
             statusCode: StatusCode.BAD_REQUEST,
             message: errorMessage.invalid_password
         })
     } catch (err) {
+        loggerCall('loginController', errorMessage.internal_server_error);
         return getErrorMessage({
             res,
             statusCode: StatusCode.INTERNAL_SERVER_ERROR,

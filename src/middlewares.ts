@@ -4,9 +4,15 @@ import * as jwt from "jsonwebtoken";
 import { getErrorMessage } from './utils';
 import { errorMessage, StatusCode, TOKEN_KEY } from './consts';
 import { CurrentUser, Role } from './entities/types';
+import { logger } from './logs/logger';
 
-export const logger = (req: Request, res: Response, next: NextFunction) => {
-    console.log(`New request: ${req.method}, ${req.url}`);
+export const incomingRequestLogger = (req: Request, res: Response, next: NextFunction) => {
+    const methodName = req.method;
+
+    logger.info(
+        `API call info: path -> ${req.path}, method -> ${methodName}`
+    );
+
     next();
 }
 

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getErrorMessage, getSuccessMessage } from '../utils';
+import { getErrorMessage, getSuccessMessage, loggerCall } from '../utils';
 import { deleteCart, getCart, updateCart } from '../services/cart';
 import { errorMessage, StatusCode } from '../consts';
 import { checkoutCart } from '../services/order';
@@ -28,6 +28,7 @@ const updateCartController = async (req: Request, res: Response) => {
         });
     }
 
+    loggerCall('updateCartController', errorMessage.cart_not_found);
     return getErrorMessage({
         res,
         statusCode: StatusCode.NOT_FOUND,
@@ -40,6 +41,7 @@ const deleteCartController = async (req: Request, res: Response) => {
         const isAdmin = req.user.role === Role.admin;
 
         if (!isAdmin) {
+            loggerCall('deleteCartController', errorMessage.not_admin);
             return getErrorMessage({
                 res,
                 statusCode: StatusCode.FORBIDDEN,
@@ -58,12 +60,14 @@ const deleteCartController = async (req: Request, res: Response) => {
             });
         }
 
+        loggerCall('deleteCartController', errorMessage.cart_not_found);
         return getErrorMessage({
             res,
             statusCode: StatusCode.NOT_FOUND,
             message: errorMessage.cart_not_found
         })
     } catch (err) {
+        loggerCall('deleteCartController', errorMessage.internal_server_error);
         return getErrorMessage({
             res,
             statusCode: StatusCode.INTERNAL_SERVER_ERROR,
@@ -85,6 +89,7 @@ const checkoutCartController = async (req: Request, res: Response) => {
         });
     }
 
+    loggerCall('checkoutCartController', errorMessage.cart_not_found);
     return getErrorMessage({
         res,
         statusCode: StatusCode.NOT_FOUND,

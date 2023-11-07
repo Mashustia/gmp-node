@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getErrorMessage, getSuccessMessage } from '../utils';
+import { getErrorMessage, getSuccessMessage, loggerCall } from '../utils';
 import { getProduct, getProducts } from '../services/products';
 import { errorMessage, StatusCode } from '../consts';
 
@@ -17,6 +17,7 @@ const getProductController = async (req: Request, res: Response) => {
     const productId = req.params.productId;
 
     if (!productId) {
+        loggerCall('getProductController', errorMessage.products_not_valid);
         getErrorMessage({
             res,
             statusCode: StatusCode.BAD_REQUEST,
@@ -33,6 +34,7 @@ const getProductController = async (req: Request, res: Response) => {
         });
     }
 
+    loggerCall('getProductController', errorMessage.no_product_found);
     return getErrorMessage({
         res,
         statusCode: StatusCode.NOT_FOUND,

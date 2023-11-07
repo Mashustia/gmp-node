@@ -1,6 +1,7 @@
 import { Response } from 'express';
 
 import { CartItemModel, CartModelAndMethods, CartTemplate, UserModel } from './entities/types';
+import { logger } from './logs/logger';
 
 export const getTotalPrice = (items: CartItemModel[]): number => items
     .reduce((partialSum, { product, count }) => partialSum + product.price * count, 0)
@@ -47,3 +48,6 @@ export const fetchCartAndTotalPrice = (cart: CartModelAndMethods): CartTemplate 
     cart: fetchCartItemsUserIdExcluded(cart),
     total: getTotalPrice(cart.items)
 });
+
+export const loggerCall = (componentName: string, errorMessage: string) => logger
+    .error(`Error in ${componentName}: ${errorMessage}`);
