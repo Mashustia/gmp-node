@@ -52,3 +52,4 @@ export const StatusCode = {
 }
 
 export const PORT = process.env.PORT || 3000;
+export const URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/node-gmp-db-mongo';

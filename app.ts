@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 
-import { Path, PORT, Route } from './src/consts';
+import { Path, PORT, Route, URI } from './src/consts';
 import { verifyToken, errorHandler, logger } from './src/middlewares';
 import { authRouter, cartRouter, productsRouter, registrationRouter } from './src/router';
 import { CurrentUser } from './src/entities/types';
@@ -30,7 +30,7 @@ const startApp = async () => {
     app.use(errorHandler);
     app.use(logger);
 
-    await mongoose.connect('mongodb://127.0.0.1:27017/node-gmp-db-mongo').then(() => console.log('connected to mongodb!'))
+    await mongoose.connect(URI).then(() => console.log('connected to mongodb!'))
 
     app.listen(PORT, () => {
         console.log('Server is started');
