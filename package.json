@@ -4,13 +4,8 @@
   "description": "Project developed during GMP node course.",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
-    "module_2": "node activityMonitor.js",
-    "task1": "node module_3/eventEmitter.js",
-    "task2": "node module_3/withTime.js",
+    "start": "nodemon app.ts",
     "test": "jest",
-    "module_5": "nodemon --esm src/module_5/server.ts",
-    "module_6": "nodemon app.ts",
     "test:coverage": "jest --coverage"
   },
   "repository": {
