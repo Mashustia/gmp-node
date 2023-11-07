@@ -2,8 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 
-import { PORT } from './src/module_5/const';
-import { Path, Route } from './src/module_6/consts';
+import { Path, PORT, Route } from './src/module_6/consts';
 import { verifyToken, errorHandler, logger } from './src/module_6/middlewares';
 import { authRouter, cartRouter, productsRouter, registrationRouter } from './src/module_6/router';
 import { CurrentUser } from './src/module_7/entities/types';

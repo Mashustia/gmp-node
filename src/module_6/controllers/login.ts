@@ -3,8 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 import { getErrorMessage, getSuccessMessage } from '../utils';
-import { StatusCode } from '../../module_5/const';
-import { errorMessage, TOKEN_KEY } from '../consts';
+import { errorMessage, StatusCode, TOKEN_KEY } from '../consts';
 import { findUserByEmail } from './users';
 
 const loginController = async (req: Request, res: Response) => {

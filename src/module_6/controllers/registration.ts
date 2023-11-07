@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 
 import { getErrorMessage, getSuccessMessage } from '../utils';
-import { StatusCode } from '../../module_5/const';
-import { errorMessage } from '../consts';
+import { errorMessage, StatusCode } from '../consts';
 import { createUser, findUserByEmail } from './users';
 import { Role } from '../../module_7/entities/types';
 

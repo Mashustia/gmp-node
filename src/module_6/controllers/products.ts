@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { getErrorMessage, getSuccessMessage } from '../utils';
 import { getProduct, getProducts } from '../services/products';
-import { StatusCode } from '../../module_5/const';
-import { errorMessage } from '../consts';
+import { errorMessage, StatusCode } from '../consts';
 
 const getProductsController = async (req: Request, res: Response) => {
     const products = await getProducts();

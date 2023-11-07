@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { getErrorMessage, getSuccessMessage } from '../utils';
-import { StatusCode } from '../../module_5/const';
 import { deleteCart, getCart, updateCart } from '../services/cart';
-import { errorMessage } from '../consts';
+import { errorMessage, StatusCode } from '../consts';
 import { checkoutCart } from '../services/order';
 import { Role } from '../../module_7/entities/types';
 

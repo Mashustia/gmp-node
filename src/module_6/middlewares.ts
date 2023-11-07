@@ -2,8 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as jwt from "jsonwebtoken";
 
 import { getErrorMessage } from './utils';
-import { StatusCode } from '../module_5/const';
-import { errorMessage, TOKEN_KEY } from './consts';
+import { errorMessage, StatusCode, TOKEN_KEY } from './consts';
 import { CurrentUser, Role } from '../module_7/entities/types';
 
 export const logger = (req: Request, res: Response, next: NextFunction) => {
