@@ -42,8 +42,6 @@ export const errorMessage = {
     health_check_success: 'Health check success',
 }
 
-export const TOKEN_KEY = 'somegibberish345345'
-
 export const StatusCode = {
     OK: 200,
     CREATED: 201,
@@ -54,6 +52,3 @@ export const StatusCode = {
     INTERNAL_SERVER_ERROR: 500,
     CONFLICT: 409,
 }
-
-export const PORT = process.env.PORT || 3000;
-export const URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/node-gmp-db-mongo';

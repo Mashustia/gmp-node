@@ -2,8 +2,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
 import * as net from 'net';
+import * as dotenv from "dotenv";
 
-import { Path, PORT, Route, URI } from './src/consts';
+import { Path, Route } from './src/consts';
 import { verifyToken, errorHandler, incomingRequestLogger } from './src/middlewares';
 import { authRouter, cartRouter, healthCheck, productsRouter, registrationRouter } from './src/router';
 import { CurrentUser } from './src/entities/types';
@@ -16,6 +17,7 @@ declare global {
     }
 }
 
+dotenv.config();
 const app = express();
 const startApp = async () => {
     app.use(express.json())
@@ -32,9 +34,9 @@ const startApp = async () => {
 
     app.use(errorHandler);
 
-    await mongoose.connect(URI).then(() => console.log('connected to mongodb!'))
+    await mongoose.connect(process.env.MONGODB_URI!).then(() => console.log('connected to mongodb!'))
 
-    const server = app.listen(PORT, () => {
+    const server = app.listen(process.env.PORT!, () => {
         console.log('Server is started');
     })
 

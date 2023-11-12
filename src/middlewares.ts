@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as jwt from "jsonwebtoken";
 
 import { getErrorMessage } from './utils';
-import { errorMessage, StatusCode, TOKEN_KEY } from './consts';
+import { errorMessage, StatusCode } from './consts';
 import { CurrentUser, Role } from './entities/types';
 import { logger } from './logs/logger';
 
@@ -49,7 +49,7 @@ export const verifyToken = async (
     }
 
     try {
-        const user = jwt.verify(token, TOKEN_KEY!) as CurrentUser;
+        const user = jwt.verify(token, process.env.TOKEN_KEY!) as CurrentUser;
         req.user = user;
     } catch (error) {
         return getErrorMessage({

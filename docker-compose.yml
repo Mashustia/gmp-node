@@ -1,7 +1,19 @@
 version: '3.3'
 services:
-  mongo:
+  nodejs:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - '27017:27017'
+      - ${APP_PORT}:${APP_PORT}
+    depends_on:
+      - mongodb
+    env_file:
+      - '.env'
+  mongo:
     container_name: node-gmp-db-mongo
     image: mongo
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - ./db-data:/db

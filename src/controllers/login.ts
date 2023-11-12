@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 import { getErrorMessage, getSuccessMessage, loggerCall } from '../utils';
-import { errorMessage, StatusCode, TOKEN_KEY } from '../consts';
+import { errorMessage, StatusCode } from '../consts';
 import { findUserByEmail } from './users';
 
 const loginController = async (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ const loginController = async (req: Request, res: Response) => {
         if (passwordMatches) {
             const token = jwt.sign(
                 { id: user._id, email, role: user.role },
-                TOKEN_KEY,
+                process.env.TOKEN_KEY!,
                 {
                     expiresIn: '2h',
                 }
