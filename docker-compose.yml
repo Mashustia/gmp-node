@@ -11,7 +11,7 @@ services:
       - mongodb
     env_file:
       - '.env'
-  mongo:
+  mongodb:
     container_name: node-gmp-db-mongo
     image: mongo
     ports:

@@ -7,7 +7,6 @@
     "start": "set DEBUG=my-app & nodemon app.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "prepare": "husky install",
     "lint": "eslint src",
     "precommit": "npm run lint && npm test"
   },
