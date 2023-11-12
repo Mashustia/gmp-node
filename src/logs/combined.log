@@ -1,0 +1,4 @@
+{"level":"info","message":"API call info: path -> /api/login, method -> POST","service":"user-service"}
+{"level":"info","message":"API call info: path -> /api/profile/cart, method -> GET","service":"user-service"}
+{"level":"info","message":"API call info: path -> /api/login, method -> POST","service":"user-service"}
+{"level":"error","message":"Error in loginController: User is not found","service":"user-service"}
