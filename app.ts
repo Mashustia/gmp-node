@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose';
 import * as net from 'net';
 import * as dotenv from "dotenv";
 
-import { Path, Route } from './src/consts';
+import { ConnectionTimeout, Path, Route } from './src/consts';
 import { verifyToken, errorHandler, incomingRequestLogger } from './src/middlewares';
 import { authRouter, cartRouter, healthCheck, productsRouter, registrationRouter } from './src/router';
 import { CurrentUser } from './src/entities/types';
@@ -61,13 +61,13 @@ const startApp = async () => {
         setTimeout(() => {
             console.error('Could not close connections in time, forcefully shutting down');
             process.exit(1);
-        }, 20000);
+        }, ConnectionTimeout.SHUTDOWN);
 
         connections.forEach((connection) => connection.end());
 
         setTimeout(() => {
             connections.forEach((connection) => connection.destroy());
-        }, 10000);
+        }, ConnectionTimeout.DESTROY);
     }
 
     process.on('SIGTERM', shutdown);

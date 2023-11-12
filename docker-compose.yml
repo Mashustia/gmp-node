@@ -2,10 +2,11 @@ version: '3.3'
 services:
   nodejs:
     build:
+      # build from Dockerfile
       context: .
       dockerfile: Dockerfile
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - ${PORT}:${PORT}
     depends_on:
       - mongodb
     env_file:

@@ -52,3 +52,8 @@ export const StatusCode = {
     INTERNAL_SERVER_ERROR: 500,
     CONFLICT: 409,
 }
+
+export const ConnectionTimeout = {
+    SHUTDOWN: 20000,
+    DESTROY: 10000,
+}
