@@ -24,3 +24,7 @@ yarn-error.log*
 
 # idea
 .idea
+
+# logs
+/src/logs/combined.log
+/src/logs/error.log
