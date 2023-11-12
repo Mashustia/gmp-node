@@ -8,11 +8,13 @@ services:
       args:
         NODE_ENV: production
     restart: always
+    env_file:
+      - '.env'
     ports:
-      - "3000:3000"
+      - ${PORT}:${PORT}
     environment:
       NODE_ENV: production
-        - MONGODB_URI=mongodb://mongo:27017/node-gmp-db-mongo
+        - ${MONGODB_URI}
     depends_on:
       - mongo
     networks:
@@ -22,7 +24,7 @@ services:
     image: mongo:latest
     restart: always
     ports:
-      - "27017:27017"
+      - ${DB_PORT}:${DB_PORT}
     volumes:
       - ./data/mongo:/data/db
     networks:
