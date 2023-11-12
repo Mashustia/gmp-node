@@ -11,11 +11,14 @@ import { getProductController, getProductsController } from './controllers/produ
 import loginController from './controllers/login';
 import registrationController from './controllers/registration';
 import { isAdminCheck } from './middlewares';
+import healthController from './controllers/healthController';
 
 export const cartRouter = express.Router();
 export const productsRouter = express.Router();
 export const authRouter = express.Router();
 export const registrationRouter = express.Router();
+export const healthCheck = express.Router();
+
 
 // hypothetical routes
 
@@ -36,4 +39,7 @@ authRouter.post(Route.default, loginController);
 
 // /api/register
 registrationRouter.post(Route.default, registrationController);
+
+// /health
+healthCheck.get(Route.default, healthController);
 

@@ -4,7 +4,7 @@
   "description": "Project developed during GMP node course.",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon app.ts",
+    "start": "set DEBUG=my-app & nodemon app.ts",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "prepare": "husky install",
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "2.4.5",
+    "@types/debug": "4.1.12",
     "@types/express": "4.17.18",
     "@types/jest": "29.5.5",
     "@types/jsonwebtoken": "9.0.4",
@@ -45,6 +46,7 @@
     "@types/uuid": "9.0.4",
     "@typescript-eslint/eslint-plugin": "6.10.0",
     "@typescript-eslint/parser": "6.10.0",
+    "debug": "4.3.4",
     "eslint": "8.53.0",
     "eslint-plugin-react": "7.33.2",
     "husky": "8.0.3",

@@ -9,6 +9,7 @@ export const Route = {
     register: '/register',
     login: '/login',
     profile: '/profile',
+    health: '/health',
 }
 
 export const Path = {
@@ -35,7 +36,10 @@ export const errorMessage = {
     token_is_required: 'Token is required',
     invalid_token: 'Invalid Token',
     user_exist: 'User Already Exist. Please Login',
-    not_admin: "Only users with administrator privileges can delete the shopping cart"
+    not_admin: 'Only users with administrator privileges can delete the shopping cart',
+    server_connection_error: 'MongoDB connection error',
+    health_check_failed: 'Health check failed',
+    health_check_success: 'Health check success',
 }
 
 export const TOKEN_KEY = 'somegibberish345345'

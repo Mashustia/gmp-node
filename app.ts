@@ -4,7 +4,7 @@ import * as mongoose from 'mongoose';
 
 import { Path, PORT, Route, URI } from './src/consts';
 import { verifyToken, errorHandler, incomingRequestLogger } from './src/middlewares';
-import { authRouter, cartRouter, productsRouter, registrationRouter } from './src/router';
+import { authRouter, cartRouter, healthCheck, productsRouter, registrationRouter } from './src/router';
 import { CurrentUser } from './src/entities/types';
 
 declare global {
@@ -21,6 +21,7 @@ const startApp = async () => {
     app.use(bodyParser.json())
     app.use(incomingRequestLogger);
 
+    app.use(Route.health, healthCheck);
     app.use(Path.registration, registrationRouter);
     app.use(Path.auth, authRouter);
     app.use(Route.api, verifyToken);
