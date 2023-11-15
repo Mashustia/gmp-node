@@ -8,6 +8,7 @@ import {
     getNextPublicHolidays
 } from '../services/public-holidays.service';
 import {PUBLIC_HOLIDAYS_API_URL} from '../config';
+import { PublicHoliday } from '../types';
 
 const mockHolidays = [
     {
@@ -364,7 +365,7 @@ describe('Nager.Date API - V3 E2E tests', () => {
             const { status, body } = await request(PUBLIC_HOLIDAYS_API_URL).get(api_url);
 
             expect(status).toEqual(StatusCode.OK);
-            body.forEach((holiday: any) => {
+            body.forEach((holiday: PublicHoliday) => {
                 expect(holiday).toEqual(
                     expect.objectContaining({
                         date: expect.any(String),
@@ -385,7 +386,7 @@ describe('Nager.Date API - V3 E2E tests', () => {
             const { status, body } = await request(PUBLIC_HOLIDAYS_API_URL).get(api_url);
 
             expect(status).toEqual(StatusCode.OK);
-            body.forEach((holiday: any) => {
+            body.forEach((holiday: PublicHoliday) => {
                 expect(holiday).toEqual(
                     expect.objectContaining({
                         date: expect.any(String),

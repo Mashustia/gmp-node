@@ -1,7 +1,33 @@
-version: '3.3'
+version: "3.9"
 services:
-  mongo:
+  app:
+    container_name: my_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    restart: always
+    env_file:
+      - '.env'
     ports:
-      - '27017:27017'
-    container_name: node-gmp-db-mongo
-    image: mongo
+      - ${PORT}:${PORT}
+    environment:
+      NODE_ENV: production
+        - ${MONGODB_URI}
+    depends_on:
+      - mongo
+    networks:
+      - my_network
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    volumes:
+      - ./data/mongo:/data/db
+    networks:
+      - my_network
+networks:
+  my_network:
