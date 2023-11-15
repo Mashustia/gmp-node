@@ -16,8 +16,7 @@ const createUser = async (user: NewUser): Promise<string | null> => {
         .then(savedUser => {
             return savedUser._id.toString();
         })
-        .catch(error => {
-            console.log(error);
+        .catch(() => {
             return null;
         })
 }

@@ -54,8 +54,7 @@ const updateUserCart = async (userId: string, product: ProductData): Promise<Car
 
             return await activeCart.save()
                 .then(savedCart => fetchCartAndTotalPrice(savedCart))
-                .catch(error => {
-                    console.log(error);
+                .catch(() => {
                     return null;
                 })
         }
@@ -65,8 +64,7 @@ const updateUserCart = async (userId: string, product: ProductData): Promise<Car
 
             return await activeCart.save()
                 .then(savedCart => fetchCartAndTotalPrice(savedCart))
-                .catch(error => {
-                    console.log(error);
+                .catch(() => {
                     return null;
                 })
         }
@@ -83,8 +81,7 @@ const updateUserCart = async (userId: string, product: ProductData): Promise<Car
 
             return await activeCart.save()
                 .then(savedCart => fetchCartAndTotalPrice(savedCart))
-                .catch(error => {
-                    console.log(error);
+                .catch(() => {
                     return null;
                 })
         }
